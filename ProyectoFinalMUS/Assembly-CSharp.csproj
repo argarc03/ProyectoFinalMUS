@@ -63,7 +63,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\InputHandler.cs" />
     <Compile Include="Assets\OSC\OSCBundle.cs" />
     <Compile Include="Assets\OSC\OSCCall.cs" />
     <Compile Include="Assets\OSC\OSCClient.cs" />
@@ -72,6 +71,7 @@
     <Compile Include="Assets\OSC\OSCPacket.cs" />
     <Compile Include="Assets\OSC\OSCReciever.cs" />
     <Compile Include="Assets\OSC\OSCServer.cs" />
+    <Compile Include="Assets\Scripts\InputHandler.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/hlocal/MUS/ProyectoFinal/ProyectoFinalMUS/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

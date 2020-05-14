@@ -1,3 +1,11 @@
+s.boot
+
+// TEST
+
+play{SinOsc.ar(OnePole.ar(Mix(
+	LFSaw.ar([1,0.99],[0,0.6],2000,2000).trunc([400,600])*[1,-1]
+),0.98)).dup*0.1}
+
 // SAMPLERS DEFINITIONS
 
 //~foodVar = Buffer.read(Server.default);
@@ -10,11 +18,10 @@ SynthDef(\sampler,
 		buffer = 0;
 		var signal;
 
-		signal =
-		Pluck.ar([SinOsc.ar(440, 0, 0.2), SinOsc.ar(442, 0, 0.2)], Impulse.kr(2),0,0);
+		signal = Pluck.ar([SinOsc.ar(440, 0, 0.2), SinOsc.ar(442, 0, 0.2)], Impulse.kr(2));
 		/*Pluck.ar(1, buffer,
 		BufRateScale.kr(buffer)*rate,
-			doneAction:2
+		doneAction:2
 		);*/
 
 		Out.ar(out, signal*amp);
@@ -35,25 +42,24 @@ OSCdef.new(
 );
 
 
-// Food
+// Synth
+
+x = nil;
+
 OSCdef.new(
-	\food,
+	\synth,
 	{arg msg;
 		[msg].postln;
 
-		Synth(\sampler);
+		if ( [msg][0][1] == -1.0)
+		{
+			x.free();
+			x = nil;
+		}
+		{
+			x = Synth(\sampler)
+		}
 	},
-	'/food',
-	nil, 57120
-);
-
-// Move
-OSCdef.new(
-	\move,
-	{arg msg;
-		[msg].postln;
-
-	},
-	'/move',
+	'/synth',
 	nil, 57120
 );
