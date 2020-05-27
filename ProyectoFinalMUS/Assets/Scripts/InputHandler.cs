@@ -8,9 +8,12 @@ public class InputHandler : MonoBehaviour
 {
     // Samplers menu & buttons
     public GameObject panelSamplers;
-
-    public List<GameObject> ButtonsSampler = new List<GameObject>();
+    public List<GameObject> buttonsSampler = new List<GameObject>();
     //int currentSelected = 0;
+
+    // FX menu & buttons
+    public GameObject panelFX;
+    public List<GameObject> buttonsFX = new List<GameObject>();
 
     // Intruments prefabs
     public GameObject sinPrefab;
@@ -28,12 +31,13 @@ public class InputHandler : MonoBehaviour
     {
         EventSystem.current.SetSelectedGameObject(null, null);
         panelSamplers.SetActive(false);
-
+        panelFX.SetActive(false);
         // Calculate 
     }
 
     void Update()
     {
+        // UPDATE SAMPLERS PANEL-------------
         // Show/hide the samplers panel
         if (Input.GetAxis("RightTrigger") != 0)
             panelSamplers.SetActive(true);
@@ -46,22 +50,44 @@ public class InputHandler : MonoBehaviour
             panelSamplers.SetActive(false);
         }
 
-
         // Select button with right joystick
         float posX = Input.GetAxis("RightHorizontal");
         float posY = Input.GetAxis("RightVertical");
-
         float angle = Mathf.Atan2(posX, posY) * Mathf.Rad2Deg;
-
         //print(angle);
 
         if (angle == 0)
             EventSystem.current.SetSelectedGameObject(null, null);
         else if (angle < 0)
-            EventSystem.current.SetSelectedGameObject(ButtonsSampler[0], null);
+            EventSystem.current.SetSelectedGameObject(buttonsSampler[0], null);
         else
-            EventSystem.current.SetSelectedGameObject(ButtonsSampler[1], null);
+            EventSystem.current.SetSelectedGameObject(buttonsSampler[1], null);
 
+        // UPDATE FX PANEL-----------
+        // Show/hide the samplers panel
+        if (Input.GetAxis("LeftTrigger") != 0)
+            panelFX.SetActive(true);
+        else
+        {
+            // Call the onClick event if the selected gameObject is not null
+            if (EventSystem.current.currentSelectedGameObject != null && panelFX.activeSelf)
+                EventSystem.current.currentSelectedGameObject.GetComponent<Button>().onClick.Invoke();
+
+            panelFX.SetActive(false);
+        }
+
+        // Select button with left joystick
+        float FXposX = Input.GetAxis("LeftHorizontal");
+        float FXposY = Input.GetAxis("LeftVertical");
+        float FXangle = Mathf.Atan2(FXposX, FXposY) * Mathf.Rad2Deg;
+        //print(angle);
+
+        if (FXangle == 0)
+            EventSystem.current.SetSelectedGameObject(null, null);
+        else if (FXangle < 0)
+            EventSystem.current.SetSelectedGameObject(buttonsFX[0], null);
+        else
+            EventSystem.current.SetSelectedGameObject(buttonsFX[1], null);
     }
 
 
@@ -70,9 +96,9 @@ public class InputHandler : MonoBehaviour
     {
         OSCHandler.Instance.SendMessageToClient("SuperCollider", name, 1.0);
         print("New synth added");
-        
+
         x++;
-        if(x>width)
+        if (x > width)
         {
             x = 1;
             y++;
