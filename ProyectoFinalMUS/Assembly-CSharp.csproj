@@ -71,6 +71,7 @@
     <Compile Include="Assets\OSC\OSCPacket.cs" />
     <Compile Include="Assets\OSC\OSCReciever.cs" />
     <Compile Include="Assets\OSC\OSCServer.cs" />
+    <Compile Include="Assets\PianoController.cs" />
     <Compile Include="Assets\Scripts\InputHandler.cs" />
     <Compile Include="Assets\Scripts\SoundObjectManager.cs" />
     <Reference Include="Unity.Timeline.Editor">
