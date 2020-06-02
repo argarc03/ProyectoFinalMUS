@@ -54,10 +54,10 @@ public class InputHandler : MonoBehaviour
 
     void Update()
     {
-        if (!objectNavigationMode && Input.GetButtonDown("Button Y"))
+        /*if (!objectNavigationMode && Input.GetButtonDown("Button Y"))
             setCursorNavigationMode(true);
         else if (objectNavigationMode && Input.GetButtonDown("Button B"))
-            setCursorNavigationMode(false);
+            setCursorNavigationMode(false);*/
 
         if (objectNavigationMode)
         {
@@ -170,7 +170,7 @@ public class InputHandler : MonoBehaviour
                 pianoPlaying = true;
             }
         }
-        else if (Input.GetButtonDown("Button Y")) // G
+        else if (Input.GetButton("Button Y")) // G
         {
             if (!pianoPlaying)
             {
@@ -178,7 +178,7 @@ public class InputHandler : MonoBehaviour
                 pianoPlaying = true;
             }
         }
-        else if (Input.GetButtonDown("Button X")) // A
+        else if (Input.GetButton("Button X")) // A
         {
             if (!pianoPlaying)
             {
@@ -186,7 +186,7 @@ public class InputHandler : MonoBehaviour
                 pianoPlaying = true;
             }
         }
-        else if (Input.GetButtonDown("Button A")) // B
+        else if (Input.GetButton("Button A")) // B
         {
             if (!pianoPlaying)
             {
@@ -194,7 +194,7 @@ public class InputHandler : MonoBehaviour
                 pianoPlaying = true;
             }
         }
-        else if (Input.GetButtonDown("Button B")) // C2
+        else if (Input.GetButton("Button B")) // C2
         {
             if (!pianoPlaying)
             {
