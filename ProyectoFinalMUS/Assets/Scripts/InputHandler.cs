@@ -25,14 +25,14 @@ public class InputHandler : MonoBehaviour
     // Sound Objects Manager
     public SoundObjectManager soundObjManager;
 
-    int x = 0;
-    int y = 0;
-
     // Sound Object Navigation
     public GameObject objectCursor;
+    public GameObject navigationInstructions;
 
     int cursorX = 0;
     int cursorY = 0;
+    int prevDirX = 0;
+    int prevDirY = 0;
     public float cursorHeight = 1;
 
     bool objectNavigationMode = false;
@@ -51,21 +51,24 @@ public class InputHandler : MonoBehaviour
 
     void Update()
     {
-        if (!objectNavigationMode && Input.GetButtonDown("Button Y"))
+        if (!objectNavigationMode && (Input.GetAxis("LeftHorizontal") != 0 || Input.GetAxis("LeftVertical") != 0) && soundObjManager.getNumOfSounds() > 0)
             setCursorNavigationMode(true);
-        else if (objectNavigationMode && Input.GetButtonDown("Button B"))
+        else if (objectNavigationMode && (Input.GetButtonDown("Button B") || soundObjManager.getNumOfSounds() == 0))
             setCursorNavigationMode(false);
 
         if(objectNavigationMode)
         {
             updateCursorNavigationMode();
-            return;
         }
 
         // UPDATE SAMPLERS PANEL-------------
         // Show/hide the samplers panel
         if (Input.GetAxis("RightTrigger") != 0)
+        {
             panelSamplers.SetActive(true);
+            if(objectNavigationMode)
+                setCursorNavigationMode(false);
+        }
         else
         {
 
@@ -146,24 +149,59 @@ public class InputHandler : MonoBehaviour
 
         if (Input.GetAxis("LeftHorizontal") != 0)
             dirX = Input.GetAxis("LeftHorizontal") < 0 ? -1 : 1;
-        /*else */if (Input.GetAxis("LeftVertical") != 0)
-            dirY = Input.GetAxis("LeftVertical") < 0 ? -1 : 1;
+        else if (Input.GetAxis("LeftVertical") != 0)
+            dirY = Input.GetAxis("LeftVertical") < 0 ? 1 : -1;
 
-        if (dirX != 0 || dirY != 0)
+        // Limit movement of the cursor
+        if (dirX == prevDirX)
+            dirX = 0;
+        else prevDirX = dirX;
+
+        if (dirY == prevDirY)
+            dirY = 0;
+        else prevDirX = dirY;
+
+        int newCursorX = cursorX, newCursorY = cursorY;
+        GameObject selectedGO = null;
+        bool cursorUpdated = false;
+        // Horizontal movement of the cursor
+        if (dirX != 0)
         {
-            int newCursorX = cursorX + dirX, newCursorY = cursorY + dirY;
-            // TODO: Buscar el primer objeto no null en la dirección [newCursorX, newCursorY]
-            if (newCursorX > 0 && newCursorX < soundObjManager.width && newCursorY >= 0 && newCursorY < soundObjManager.height 
-                && soundObjects[newCursorY, newCursorX] != null)
+            newCursorX += dirX;
+
+            while (newCursorX >= 0 && newCursorX < soundObjManager.width && selectedGO == null)
             {
-                cursorX = newCursorX; cursorY = newCursorY;
-                objectCursor.transform.position = new Vector3(cursorX, cursorHeight, -cursorY);
+                selectedGO = soundObjects[newCursorY, newCursorX];
+                if(selectedGO == null) newCursorX += dirX;
             }
+
+            cursorUpdated = true;
+        }
+
+        // Vertical movement of the cursor
+        if (dirY != 0)
+        {
+            newCursorY += dirY;
+
+            while (newCursorY >= 0 && newCursorY < soundObjManager.height && selectedGO == null)
+            {
+                selectedGO = soundObjects[newCursorY, newCursorX];
+                if (selectedGO == null) newCursorY += dirY;
+            }
+
+            cursorUpdated = true;
+        }
+
+        if (cursorUpdated && selectedGO != null)
+        {
+            cursorX = newCursorX; cursorY = newCursorY;
+            objectCursor.transform.position = new Vector3(cursorX + 1, cursorHeight, -cursorY);
         }
     }
 
     void setCursorNavigationMode(bool active)
     {
+        navigationInstructions.SetActive(active);
         if (!active)
         {
             objectCursor.SetActive(false);
@@ -172,7 +210,7 @@ public class InputHandler : MonoBehaviour
         else
         {
             objectCursor.transform.position = new Vector3(1, cursorHeight, 0);
-            cursorX = 1;
+            cursorX = 0;
             cursorY = 0;
             objectCursor.SetActive(true);
             objectNavigationMode = true;
@@ -183,32 +221,21 @@ public class InputHandler : MonoBehaviour
     // Add a synth to the scene
     public void AddSynth(string name)
     {
-        OSCHandler.Instance.SendMessageToClient("SuperCollider", name, 1.0);
         print("New synth added");
 
-        x++;
-        if (x > soundObjManager.width)
-        {
-            x = 1;
-            y++;
-
-            if (y > soundObjManager.height) return; // Cannot add more instruments, scenario full
-        }
-
-        // Instantiate instrument in the scenario
+        // Instantiate instrument in the scenario and add it to SuperCollider
         GameObject soundObj = null;
         switch (name)
         {
             case "/sin":
-                soundObj = Instantiate(sinPrefab, new Vector3(x, 0, -y), Quaternion.identity);
+                soundObj = sinPrefab;
                 break;
             case "/square":
-                soundObj = Instantiate(squarePrefab, new Vector3(x, 0, -y), Quaternion.identity);
+                soundObj = squarePrefab;
                 break;
             default:
                 break;
         }
-        soundObjManager.addSoundObject(x, y, soundObj);
-
+        soundObjManager.addSoundObject(name, soundObj);
     }
 }

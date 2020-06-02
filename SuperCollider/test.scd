@@ -50,23 +50,21 @@ OSCdef.new(
 	nil, 57120
 );
 
+var objects = Array.newClear(indexedSize: 50);
 
 // Sin
-
-x = nil;
 
 OSCdef.new(
 	\sin,
 	{arg msg;
 		[msg].postln;
-
 		if ( [msg][0][1] == -1.0)
 		{
-			x.free();
-			x = nil;
+			objects[[msg][0][2]].free();
+			objects[[msg][0][2]] = nil;
 		}
 		{
-			x = Synth(\sin)
+			objects[[msg][0][2]] = Synth(\sin)
 		}
 	},
 	'/sin',
@@ -75,8 +73,6 @@ OSCdef.new(
 
 // Square
 
-y = nil;
-
 OSCdef.new(
 	\square,
 	{arg msg;
@@ -84,13 +80,26 @@ OSCdef.new(
 
 		if ( [msg][0][1] == -1.0)
 		{
-			y.free();
-			y = nil;
+			objects[[msg][0][2]].free();
+			objects[[msg][0][2]] = nil;
 		}
 		{
-			y = Synth(\square)
+			objects[[msg][0][2]] = Synth(\square)
 		}
 	},
 	'/square',
+	nil, 57120
+);
+
+// Move sound to new index
+
+OSCdef.new(
+	\move,
+	{arg msg;
+		[msg].postln;
+		objects[[msg][0][2]] = objects[[msg][0][1]];
+
+	},
+	'/move',
 	nil, 57120
 );

@@ -230,8 +230,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1387236174}
-  m_RootOrder: 3
+  m_Father: {fileID: 625955417}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -357,6 +357,43 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 472367625}
   m_CullTransparentMesh: 0
+--- !u!1 &625955416
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 625955417}
+  m_Layer: 5
+  m_Name: NavigationInstructions
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &625955417
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 625955416}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1423894895}
+  - {fileID: 417915917}
+  m_Father: {fileID: 1387236174}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1062,6 +1099,7 @@ MonoBehaviour:
     type: 3}
   soundObjManager: {fileID: 1684953576}
   objectCursor: {fileID: 2084010284}
+  navigationInstructions: {fileID: 625955416}
   cursorHeight: 1
 --- !u!1 &1337930471
 GameObject:
@@ -1221,8 +1259,7 @@ RectTransform:
   m_Children:
   - {fileID: 1829702435}
   - {fileID: 472367626}
-  - {fileID: 1423894895}
-  - {fileID: 417915917}
+  - {fileID: 625955417}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1256,16 +1293,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1423894894}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1387236174}
-  m_RootOrder: 2
+  m_Father: {fileID: 625955417}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000005722, y: -182}
+  m_AnchoredPosition: {x: 323.2, y: 152.9}
   m_SizeDelta: {x: 269.9, y: 57.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1423894896
@@ -1301,9 +1338,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Press ''Y'' to manage sounds
+  m_Text: '
 
-    Press ''B'' to exit sound management'
+    Press ''B'' to exit'
 --- !u!222 &1423894897
 CanvasRenderer:
   m_ObjectHideFlags: 0
