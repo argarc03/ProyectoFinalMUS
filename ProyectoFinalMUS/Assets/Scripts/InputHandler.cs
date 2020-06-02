@@ -39,6 +39,9 @@ public class InputHandler : MonoBehaviour
 
     GameObject selectedSoundObject = null;
 
+    // PIANO-----
+    bool pianoPlaying = false;
+
     // Use this for initialization
     void Start()
     {
@@ -56,7 +59,7 @@ public class InputHandler : MonoBehaviour
         else if (objectNavigationMode && Input.GetButtonDown("Button B"))
             setCursorNavigationMode(false);
 
-        if(objectNavigationMode)
+        if (objectNavigationMode)
         {
             updateCursorNavigationMode();
             return;
@@ -126,6 +129,52 @@ public class InputHandler : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(buttonsFX[0], null);
         else
             EventSystem.current.SetSelectedGameObject(buttonsFX[1], null);
+
+
+
+        // PIANO -------------------------------------------------------------------
+
+
+        float DPADposX = Input.GetAxis("DPADHorizontal");
+        float DPADposY = Input.GetAxis("DPADVertical");
+
+        if (DPADposX > 0)
+        {
+            if (!pianoPlaying)
+            {
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, 440);
+                pianoPlaying = true;
+            }
+        }
+        else if (DPADposX < 0)
+        {
+            if (!pianoPlaying)
+            {
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, 440);
+                pianoPlaying = true;
+            }
+        }
+        else if (DPADposY > 0)
+        {
+            if (!pianoPlaying)
+            {
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, 440);
+                pianoPlaying = true;
+            }
+        }
+        else if (DPADposY < 0)
+        {
+            if (!pianoPlaying)
+            {
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, 440);
+                pianoPlaying = true;
+            }
+        }
+        else if (pianoPlaying)
+        {
+            OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", -1.0, 440);
+            pianoPlaying = false;
+        }
     }
 
     void updateCursorNavigationMode()
@@ -146,14 +195,15 @@ public class InputHandler : MonoBehaviour
 
         if (Input.GetAxis("LeftHorizontal") != 0)
             dirX = Input.GetAxis("LeftHorizontal") < 0 ? -1 : 1;
-        /*else */if (Input.GetAxis("LeftVertical") != 0)
+        /*else */
+        if (Input.GetAxis("LeftVertical") != 0)
             dirY = Input.GetAxis("LeftVertical") < 0 ? -1 : 1;
 
         if (dirX != 0 || dirY != 0)
         {
             int newCursorX = cursorX + dirX, newCursorY = cursorY + dirY;
             // TODO: Buscar el primer objeto no null en la dirección [newCursorX, newCursorY]
-            if (newCursorX > 0 && newCursorX < soundObjManager.width && newCursorY >= 0 && newCursorY < soundObjManager.height 
+            if (newCursorX > 0 && newCursorX < soundObjManager.width && newCursorY >= 0 && newCursorY < soundObjManager.height
                 && soundObjects[newCursorY, newCursorX] != null)
             {
                 cursorX = newCursorX; cursorY = newCursorY;
@@ -183,7 +233,7 @@ public class InputHandler : MonoBehaviour
     // Add a synth to the scene
     public void AddSynth(string name)
     {
-        OSCHandler.Instance.SendMessageToClient("SuperCollider", name, 1.0);
+        OSCHandler.Instance.SendMessageToClient("SuperCollider", name, 1.0, -1);
         print("New synth added");
 
         x++;

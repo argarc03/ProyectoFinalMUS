@@ -8,7 +8,26 @@ play{SinOsc.ar(OnePole.ar(Mix(
 
 // SAMPLERS DEFINITIONS----
 
+// Piano preview
+
+(
+SynthDef(\piano,
+	{
+		arg out = 0,
+		rate = 1,
+		amp = 0.5,
+		buffer = 0;
+		var signal;
+
+		signal = [SinOsc.ar(440, 0, 0.2), SinOsc.ar(440, 0, 0.2)];
+
+		Out.ar(out, signal*amp);
+}).add;
+)
+
+
 // Sin
+(
 SynthDef(\sin,
 	{
 		arg out = 0,
@@ -21,8 +40,10 @@ SynthDef(\sin,
 
 		Out.ar(out, signal*amp);
 }).add;
+)
 
 // Square
+(
 SynthDef(\square,
 	{
 		arg out = 0,
@@ -35,10 +56,12 @@ SynthDef(\square,
 
 		Out.ar(out, signal*amp);
 }).add;
+)
 
 // OSC DEFINITIONS-----
 
 // Stop all
+(
 OSCdef.new(
 	\stopAll,
 	{arg msg;
@@ -49,10 +72,37 @@ OSCdef.new(
 	'/stopAll',
 	nil, 57120
 );
+)
 
+
+// Piano preview
+
+// Piano
+(
+var piano = nil;
+
+OSCdef.new(
+	\piano,
+	{arg msg;
+		[msg].postln;
+
+		if ( [msg][0][1] == -1.0)
+		{
+			piano.free();
+			piano = nil;
+		}
+		{
+			piano = Synth(\piano, [msg][0][2])
+		}
+	},
+	'/piano',
+	nil, 57120
+);
+)
 
 // Sin
 
+(
 x = nil;
 
 OSCdef.new(
@@ -72,9 +122,9 @@ OSCdef.new(
 	'/sin',
 	nil, 57120
 );
-
+)
 // Square
-
+(
 y = nil;
 
 OSCdef.new(
@@ -94,3 +144,4 @@ OSCdef.new(
 	'/square',
 	nil, 57120
 );
+)

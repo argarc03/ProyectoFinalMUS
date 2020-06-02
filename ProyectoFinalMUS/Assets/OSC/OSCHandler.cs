@@ -109,7 +109,7 @@ public class OSCHandler : MonoBehaviour
     /// </summary>
     public void Stop()
     {
-        SendMessageToClient("SuperCollider", "/stopAll", 1.0f);
+        SendMessageToClient("SuperCollider", "/stopAll", 1.0f, -1);
     }
 
     #region Properties
@@ -242,10 +242,11 @@ public class OSCHandler : MonoBehaviour
     /// <param name="value">
     /// A <see cref="T"/>
     /// </param>
-    public void SendMessageToClient<T>(string clientId, string address, T value)
+    public void SendMessageToClient<T>(string clientId, string address, T value, int freq)
     {
         List<object> temp = new List<object>();
         temp.Add(value);
+        temp.Add(freq);
 
         SendMessageToClient(clientId, address, temp);
     }
