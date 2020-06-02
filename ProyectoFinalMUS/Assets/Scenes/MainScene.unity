@@ -484,6 +484,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeBar: {fileID: 115891483}
+  pianoItem: {fileID: 6404934460121445726, guid: 40927279aee515d44925601c914cfae5,
+    type: 3}
 --- !u!114 &514905503
 MonoBehaviour:
   m_ObjectHideFlags: 0
