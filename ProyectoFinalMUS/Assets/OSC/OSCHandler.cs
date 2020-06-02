@@ -242,7 +242,7 @@ public class OSCHandler : MonoBehaviour
     /// <param name="value">
     /// A <see cref="T"/>
     /// </param>
-    public void SendMessageToClient<T>(string clientId, string address, T value, int freq)
+    public void SendMessageToClient<T>(string clientId, string address, T value, float freq)
     {
         List<object> temp = new List<object>();
         temp.Add(value);

@@ -138,41 +138,73 @@ public class InputHandler : MonoBehaviour
         float DPADposX = Input.GetAxis("DPADHorizontal");
         float DPADposY = Input.GetAxis("DPADVertical");
 
-        if (DPADposX > 0)
+        if (DPADposX > 0) // F
         {
             if (!pianoPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, 440);
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, 349.23f);
                 pianoPlaying = true;
             }
         }
-        else if (DPADposX < 0)
+        else if (DPADposX < 0) // D
         {
             if (!pianoPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, 440);
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, 293.66f);
                 pianoPlaying = true;
             }
         }
-        else if (DPADposY > 0)
+        else if (DPADposY > 0) // C
         {
             if (!pianoPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, 440);
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, 261.63f);
                 pianoPlaying = true;
             }
         }
-        else if (DPADposY < 0)
+        else if (DPADposY < 0) // E
         {
             if (!pianoPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, 440);
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, 329.63f);
+                pianoPlaying = true;
+            }
+        }
+        else if (Input.GetButtonDown("Button Y")) // G
+        {
+            if (!pianoPlaying)
+            {
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, 392f);
+                pianoPlaying = true;
+            }
+        }
+        else if (Input.GetButtonDown("Button X")) // A
+        {
+            if (!pianoPlaying)
+            {
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, 440f);
+                pianoPlaying = true;
+            }
+        }
+        else if (Input.GetButtonDown("Button A")) // B
+        {
+            if (!pianoPlaying)
+            {
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, 493.88f);
+                pianoPlaying = true;
+            }
+        }
+        else if (Input.GetButtonDown("Button B")) // C2
+        {
+            if (!pianoPlaying)
+            {
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, 523.25f);
                 pianoPlaying = true;
             }
         }
         else if (pianoPlaying)
         {
-            OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", -1.0, 440);
+            OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", -1.0, 0);
             pianoPlaying = false;
         }
     }

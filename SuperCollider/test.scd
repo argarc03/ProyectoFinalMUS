@@ -14,12 +14,12 @@ play{SinOsc.ar(OnePole.ar(Mix(
 SynthDef(\piano,
 	{
 		arg out = 0,
-		rate = 1,
+		freq = 440,
 		amp = 0.5,
 		buffer = 0;
 		var signal;
 
-		signal = [SinOsc.ar(440, 0, 0.2), SinOsc.ar(440, 0, 0.2)];
+		signal = [SinOsc.ar(freq, 0, 0.2), SinOsc.ar(freq, 0, 0.2)];
 
 		Out.ar(out, signal*amp);
 }).add;
@@ -92,7 +92,7 @@ OSCdef.new(
 			piano = nil;
 		}
 		{
-			piano = Synth(\piano, [msg][0][2])
+			piano = Synth(\piano, [\freq, [msg][0][2]])
 		}
 	},
 	'/piano',
