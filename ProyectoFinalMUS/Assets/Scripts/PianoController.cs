@@ -16,6 +16,10 @@ public class PianoController : MonoBehaviour
     bool instantiateItem = false;
     int itemY = 0;
 
+    List<Vector3> items = new List<Vector3>(); // time pos, freq, start/stop
+    Vector3 item;
+    int i = 0;
+
     void Start()
     {
 
@@ -28,7 +32,18 @@ public class PianoController : MonoBehaviour
             handleInput();
             createItem();
             updateTime();
+            playItems();
         }
+    }
+
+    void playItems()
+    {
+        if ( i < items.Count && (time <= items[i].x + 0.01f && time >= items[i].x - 0.01f))
+        {
+            OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", items[i].z, -1, items[i].y);
+            i++;
+        }
+        if (i < items.Count) { print(items[i].x); print(time); }
     }
 
     void createItem()
@@ -44,6 +59,11 @@ public class PianoController : MonoBehaviour
     void updateTime()
     {
         time = (time + 0.01f) % maxTime;
+        if (time <= 0.01f)
+        {
+            i = 0;
+            print("time == 0");
+        }
         timeBar.transform.localPosition = new Vector3((time - 1) * 75, 0f, 0f);
     }
 
@@ -53,85 +73,114 @@ public class PianoController : MonoBehaviour
         float DPADposY = Input.GetAxis("DPADVertical");
 
         instantiateItem = true;
+        
+        item.x = time;
 
         if (DPADposX > 0) // F
         {
             if (!pianoPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, -1, 349.23f);
+                //OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, -1, 349.23f);
                 pianoPlaying = true;
                 itemY = 3;
+                item.y = 349.23f;
+                item.z = 1;
+                items.Add(item);
             }
         }
         else if (DPADposX < 0) // D
         {
             if (!pianoPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, -1, 293.66f);
+                //OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, -1, 293.66f);
                 pianoPlaying = true;
                 itemY = 1;
+                item.y = 293.66f;
+                item.z = 1;
+                items.Add(item);
             }
         }
         else if (DPADposY > 0) // C
         {
             if (!pianoPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, -1, 261.63f);
+                //OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, -1, 261.63f);
                 pianoPlaying = true;
                 itemY = 0;
+                item.y = 261.63f;
+                item.z = 1;
+                items.Add(item);
             }
         }
         else if (DPADposY < 0) // E
         {
             if (!pianoPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, -1, 329.63f);
+                //OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, -1, 329.63f);
                 pianoPlaying = true;
                 itemY = 2;
+                item.y = 329.63f;
+                item.z = 1;
+                items.Add(item);
             }
         }
         else if (Input.GetButton("Button Y")) // G
         {
             if (!pianoPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, -1, 392f);
+                //OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, -1, 392f);
                 pianoPlaying = true;
                 itemY = 4;
+                item.y = 392f;
+                item.z = 1;
+                items.Add(item);
             }
         }
         else if (Input.GetButton("Button X")) // A
         {
             if (!pianoPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, -1, 440f);
+                //OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, -1, 440f);
                 pianoPlaying = true;
                 itemY = 5;
+                item.y = 440f;
+                item.z = 1;
+                items.Add(item);
             }
         }
         else if (Input.GetButton("Button A")) // B
         {
             if (!pianoPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, -1, 493.88f);
+                //OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, -1, 493.88f);
                 pianoPlaying = true;
                 itemY = 6;
+                item.y = 493.88f;
+                item.z = 1;
+                items.Add(item);
             }
         }
         else if (Input.GetButton("Button B")) // C2
         {
             if (!pianoPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, -1, 523.25f);
+                //OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, -1, 523.25f);
                 pianoPlaying = true;
                 itemY = 7;
+                item.y = 523.25f;
+                item.z = 1;
+                items.Add(item);
             }
         }
         else
         {
             if (pianoPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", -1.0, -1, 0);
+                //OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", -1.0, -1, 0);
                 pianoPlaying = false;
+
+                item.z = -1;
+                items.Add(item);
             }
 
             instantiateItem = false;
