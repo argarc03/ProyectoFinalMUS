@@ -39,6 +39,10 @@ public class InputHandler : MonoBehaviour
 
     GameObject selectedSoundObject = null;
 
+    // Piano
+
+    public GameObject pianoPanel;
+
     // Use this for initialization
     void Start()
     {
@@ -180,6 +184,15 @@ public class InputHandler : MonoBehaviour
         }
     }
 
+    public void openPiano(string name)
+    {
+        /*OSCHandler.Instance.SendMessageToClient("SuperCollider", name, 1.0, -1);
+        print("New synth added");*/
+
+        pianoPanel.SetActive(true);
+        pianoPanel.GetComponent<PianoController>().pianoActive = true;
+
+    }
 
     // Add a synth to the scene
     public void AddSynth(string name)
