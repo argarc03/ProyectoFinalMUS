@@ -64,14 +64,18 @@ public class InputHandler : MonoBehaviour
 
         if (pianoPanel.activeSelf && Input.GetButtonDown("Options"))
         {
-            //print("hey!");
             pianoPanel.GetComponent<PianoController>().cleanAll();
         }
 
         if (pianoPanel.activeSelf && Input.GetButtonDown("Share"))
         {
-            //print("hey!");
             pianoPanel.GetComponent<PianoController>().undo();
+        }
+
+        if (pianoPanel.activeSelf && Input.GetAxis("RightBumper") != 0)
+        {
+            pianoPanel.GetComponent<PianoController>().acceptCreation();
+            closePiano();
         }
 
 

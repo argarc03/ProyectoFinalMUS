@@ -567,9 +567,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pianoActive: 0
+  name: 
   timeBar: {fileID: 115891483}
   pianoItem: {fileID: 6404934460121445726, guid: 40927279aee515d44925601c914cfae5,
     type: 3}
+  timeControl: {fileID: 963194232}
+  soundObj: {fileID: 8742112871038246639, guid: 95449544c822a8144b496ddc73897ebe,
+    type: 3}
+  soundObjManager: {fileID: 1684953576}
 --- !u!114 &514905503
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1284,6 +1289,7 @@ GameObject:
   - component: {fileID: 963194230}
   - component: {fileID: 963194229}
   - component: {fileID: 963194231}
+  - component: {fileID: 963194232}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1410,6 +1416,20 @@ MonoBehaviour:
   cursorHeight: 1
   pianoPanel: {fileID: 514905500}
   drumsPanel: {fileID: 628321779}
+--- !u!114 &963194232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad3822c108ed2764e9fda7c4bb64e4c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  time: 0
+  maxTime: 2
 --- !u!1 &1337930471
 GameObject:
   m_ObjectHideFlags: 0

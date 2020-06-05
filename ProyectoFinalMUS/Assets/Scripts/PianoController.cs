@@ -5,12 +5,10 @@ using UnityEngine;
 public class PianoController : MonoBehaviour
 {
     public bool pianoActive = false;
-
     bool pianoPlaying = false;
+    public string name = ""; //usar esto cuando se añadan varios instrumentos!!!!
 
     public GameObject timeBar;
-    float time = 0f;
-    float maxTime = 2f;
 
     public GameObject pianoItem;
     bool instantiateItem = false;
@@ -21,6 +19,11 @@ public class PianoController : MonoBehaviour
     List<Vector3> items = new List<Vector3>(); // time pos, freq, start/stop
     Vector3 item;
     int i = 0;
+
+    public TimeController timeControl;
+
+    public GameObject soundObj;
+    public SoundObjectManager soundObjManager;
 
     void Start()
     {
@@ -33,9 +36,17 @@ public class PianoController : MonoBehaviour
         {
             handleInput();
             createItem();
-            updateTime();
             playItems();
+            updateTime();
         }
+    }
+
+    public void acceptCreation()
+    {
+        soundObj.GetComponent<Sound>().items = items;
+        soundObj.GetComponent<Sound>().name = name;
+        soundObj.GetComponent<Sound>().timeControl = timeControl;
+        soundObjManager.addSoundObject(name, soundObj);
     }
 
     public void undo()
@@ -60,7 +71,6 @@ public class PianoController : MonoBehaviour
                     k--;
                 }
             }
-
         }
     }
 
@@ -86,7 +96,7 @@ public class PianoController : MonoBehaviour
 
     void playItems()
     {
-        if (i < items.Count && (time <= items[i].x + 0.01f && time >= items[i].x - 0.01f))
+        if (i < items.Count && (timeControl.time <= items[i].x + 0.01f && timeControl.time >= items[i].x - 0.01f))
         {
             OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", items[i].z, -1, items[i].y);
             i++;
@@ -96,7 +106,7 @@ public class PianoController : MonoBehaviour
 
     void createItem()
     {
-        if (instantiateItem && (time % 0.1f) < 0.05f)
+        if (instantiateItem && (timeControl.time % 0.1f) < 0.05f)
         {
             Vector3 itemPos = timeBar.transform.position;
             itemPos.y = itemY * 20 + 36;
@@ -106,13 +116,11 @@ public class PianoController : MonoBehaviour
 
     void updateTime()
     {
-        time = (time + 0.01f) % maxTime;
-        if (time <= 0.01f)
+        if (timeControl.time <= 0.01f)
         {
             i = 0;
-            print("time == 0");
         }
-        timeBar.transform.localPosition = new Vector3((time - 1) * 75, 0f, 0f);
+        timeBar.transform.localPosition = new Vector3((timeControl.time - 1) * 75, 0f, 0f);
     }
 
     void handleInput()
@@ -122,7 +130,7 @@ public class PianoController : MonoBehaviour
 
         instantiateItem = true;
 
-        item.x = time;
+        item.x = timeControl.time;
 
         if (DPADposX > 0) // F
         {
