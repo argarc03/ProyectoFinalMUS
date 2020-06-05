@@ -57,7 +57,7 @@ Pdef(
 		\instrument, \drumbuf,
 		\delta, Prand([0.5],inf),
 		\buf, Prand(d[\drums], inf),
-		\rate, 1,
+		\rate, 0.1,
 		\amp, 0.5,
 	);
 ).play;
@@ -161,6 +161,7 @@ OSCdef.new(
 );
 )
 
+(
 var objects = Array.newClear(indexedSize: 50);
 
 // Sin
@@ -181,7 +182,6 @@ OSCdef.new(
 	'/sin',
 	nil, 57120
 );
-)
 // Square
 
 OSCdef.new(
@@ -214,3 +214,4 @@ OSCdef.new(
 	'/move',
 	nil, 57120
 );
+)

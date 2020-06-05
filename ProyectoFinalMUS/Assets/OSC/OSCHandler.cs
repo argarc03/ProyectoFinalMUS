@@ -109,7 +109,7 @@ public class OSCHandler : MonoBehaviour
     /// </summary>
     public void Stop()
     {
-        SendMessageToClient("SuperCollider", "/stopAll", 1.0f, -1);
+        SendMessageToClient("SuperCollider", "/stopAll", 1.0f, -1, -1);
     }
 
     #region Properties

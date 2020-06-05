@@ -36,7 +36,7 @@ public class PianoController : MonoBehaviour
         if (instantiateItem && (time % 0.1f) < 0.05f)
         {
             Vector3 itemPos = timeBar.transform.position;
-            itemPos.y = itemY*20 + 36;
+            itemPos.y = itemY * 20 + 36;
             Instantiate(pianoItem, itemPos, Quaternion.identity, transform.parent);
         }
     }
@@ -58,7 +58,7 @@ public class PianoController : MonoBehaviour
         {
             if (!pianoPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, 349.23f);
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, -1, 349.23f);
                 pianoPlaying = true;
                 itemY = 3;
             }
@@ -67,7 +67,7 @@ public class PianoController : MonoBehaviour
         {
             if (!pianoPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, 293.66f);
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, -1, 293.66f);
                 pianoPlaying = true;
                 itemY = 1;
             }
@@ -76,7 +76,7 @@ public class PianoController : MonoBehaviour
         {
             if (!pianoPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, 261.63f);
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, -1, 261.63f);
                 pianoPlaying = true;
                 itemY = 0;
             }
@@ -85,7 +85,7 @@ public class PianoController : MonoBehaviour
         {
             if (!pianoPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, 329.63f);
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, -1, 329.63f);
                 pianoPlaying = true;
                 itemY = 2;
             }
@@ -94,7 +94,7 @@ public class PianoController : MonoBehaviour
         {
             if (!pianoPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, 392f);
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, -1, 392f);
                 pianoPlaying = true;
                 itemY = 4;
             }
@@ -103,7 +103,7 @@ public class PianoController : MonoBehaviour
         {
             if (!pianoPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, 440f);
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, -1, 440f);
                 pianoPlaying = true;
                 itemY = 5;
             }
@@ -112,7 +112,7 @@ public class PianoController : MonoBehaviour
         {
             if (!pianoPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, 493.88f);
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, -1, 493.88f);
                 pianoPlaying = true;
                 itemY = 6;
             }
@@ -121,7 +121,7 @@ public class PianoController : MonoBehaviour
         {
             if (!pianoPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, 523.25f);
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", 1.0, -1, 523.25f);
                 pianoPlaying = true;
                 itemY = 7;
             }
@@ -130,7 +130,7 @@ public class PianoController : MonoBehaviour
         {
             if (pianoPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", -1.0, 0);
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", -1.0, -1, 0);
                 pianoPlaying = false;
             }
 

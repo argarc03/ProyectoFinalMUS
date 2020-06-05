@@ -57,7 +57,7 @@ public class DrumController : MonoBehaviour
         {
             if (!drumPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/drumPrev", 1.0, (int)DrumID.HI_HAT);
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/drumPrev", 1.0, (int)DrumID.HI_HAT, -1);
                 drumPlaying = true;
                 itemY = 3;
             }
@@ -66,7 +66,7 @@ public class DrumController : MonoBehaviour
         {
             if (!drumPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/drumPrev", 1.0, (int)DrumID.CRASH_CYMBAL);
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/drumPrev", 1.0, (int)DrumID.CRASH_CYMBAL, -1);
                 drumPlaying = true;
                 itemY = 1;
             }
@@ -75,7 +75,7 @@ public class DrumController : MonoBehaviour
         {
             if (!drumPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/drumPrev", 1.0, (int)DrumID.HIGH_TOM);
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/drumPrev", 1.0, (int)DrumID.HIGH_TOM, -1);
                 drumPlaying = true;
                 itemY = 0;
             }
@@ -84,7 +84,7 @@ public class DrumController : MonoBehaviour
         {
             if (!drumPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/drumPrev", 1.0, (int)DrumID.SNARE);
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/drumPrev", 1.0, (int)DrumID.SNARE, -1);
                 drumPlaying = true;
                 itemY = 2;
             }
@@ -93,7 +93,7 @@ public class DrumController : MonoBehaviour
         {
             if (!drumPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/drumPrev", 1.0, (int)DrumID.MEDIUM_TOM);
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/drumPrev", 1.0, (int)DrumID.MEDIUM_TOM, -1);
                 drumPlaying = true;
                 itemY = 4;
             }
@@ -102,7 +102,7 @@ public class DrumController : MonoBehaviour
         {
             if (!drumPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/drumPrev", 1.0, (int)DrumID.KICK);
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/drumPrev", 1.0, (int)DrumID.KICK, -1);
                 drumPlaying = true;
                 itemY = 5;
             }
@@ -111,7 +111,7 @@ public class DrumController : MonoBehaviour
         {
             if (!drumPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/drumPrev", 1.0, (int)DrumID.FLOOR_TOM);
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/drumPrev", 1.0, (int)DrumID.FLOOR_TOM, -1);
                 drumPlaying = true;
                 itemY = 6;
             }
@@ -120,7 +120,7 @@ public class DrumController : MonoBehaviour
         {
             if (!drumPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/drumPrev", 1.0, (int)DrumID.RIDE_CYMBAL);
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/drumPrev", 1.0, (int)DrumID.RIDE_CYMBAL, -1);
                 drumPlaying = true;
                 itemY = 7;
             }
@@ -129,7 +129,7 @@ public class DrumController : MonoBehaviour
         {
             if (drumPlaying)
             {
-                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/drum", -1.0, 0);
+                OSCHandler.Instance.SendMessageToClient("SuperCollider", "/drum", -1.0, 0, -1);
                 drumPlaying = false;
             }
 

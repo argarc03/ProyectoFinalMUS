@@ -305,12 +305,12 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1387236174}
-  m_RootOrder: 3
+  m_Father: {fileID: 1423894895}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 323.1, y: 164}
+  m_AnchoredPosition: {x: 323.1, y: 346}
   m_SizeDelta: {x: 269.9, y: 57.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &417915918
@@ -466,7 +466,7 @@ RectTransform:
   - {fileID: 1895880164}
   - {fileID: 2134812522}
   m_Father: {fileID: 1387236174}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -560,7 +560,7 @@ RectTransform:
   - {fileID: 1502091756}
   - {fileID: 2030792169}
   m_Father: {fileID: 1387236174}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1325,9 +1325,10 @@ MonoBehaviour:
     type: 3}
   soundObjManager: {fileID: 1684953576}
   objectCursor: {fileID: 2084010284}
+  navigationInstructions: {fileID: 1423894894}
   cursorHeight: 1
   pianoPanel: {fileID: 514905500}
-  drumsPanel: {fileID: 0}
+  drumsPanel: {fileID: 628321779}
 --- !u!1 &1337930471
 GameObject:
   m_ObjectHideFlags: 0
@@ -1487,7 +1488,6 @@ RectTransform:
   - {fileID: 1829702435}
   - {fileID: 472367626}
   - {fileID: 1423894895}
-  - {fileID: 417915917}
   - {fileID: 514905501}
   - {fileID: 628321780}
   m_Father: {fileID: 0}
@@ -1526,7 +1526,8 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 417915917}
   m_Father: {fileID: 1387236174}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
