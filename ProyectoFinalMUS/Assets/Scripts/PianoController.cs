@@ -38,21 +38,55 @@ public class PianoController : MonoBehaviour
         }
     }
 
+    public void undo()
+    {
+        if (items.Count != 0)
+        {
+            // destroy the start and stop of the
+            // last item added
+            items.RemoveAt(items.Count - 1);
+            items.RemoveAt(items.Count - 1);
+
+            // remove all the instances of the last item added
+            if (itemsGO.Count != 0)
+            {
+                int k = itemsGO.Count - 1;
+                float posY = itemsGO[k].transform.position.y;
+
+                while (k >= 0 && itemsGO.Count != 0 && itemsGO[k].transform.position.y == posY)
+                {
+                    Destroy(itemsGO[k]);
+                    itemsGO.RemoveAt(k);
+                    k--;
+                }
+            }
+
+        }
+    }
+
+    public void cleanAll()
+    {
+        if (items.Count != 0)
+        {
+            pianoPlaying = false;
+
+            OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", -1, -1, -1);
+            items.Clear();
+            foreach (GameObject go in itemsGO)
+                Destroy(go);
+            itemsGO.Clear();
+        }
+    }
+
     public void deactivatePiano()
     {
         pianoActive = false;
-        pianoPlaying = false;
-
-        OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", -1, -1, -1);
-        items.Clear();
-        foreach(GameObject go in itemsGO)
-            Destroy(go);
-        itemsGO.Clear();
+        cleanAll();
     }
 
     void playItems()
     {
-        if ( i < items.Count && (time <= items[i].x + 0.01f && time >= items[i].x - 0.01f))
+        if (i < items.Count && (time <= items[i].x + 0.01f && time >= items[i].x - 0.01f))
         {
             OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", items[i].z, -1, items[i].y);
             i++;
@@ -87,7 +121,7 @@ public class PianoController : MonoBehaviour
         float DPADposY = Input.GetAxis("DPADVertical");
 
         instantiateItem = true;
-        
+
         item.x = time;
 
         if (DPADposX > 0) // F

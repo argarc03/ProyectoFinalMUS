@@ -62,6 +62,18 @@ public class InputHandler : MonoBehaviour
             closePiano();
         }
 
+        if (pianoPanel.activeSelf && Input.GetButtonDown("Options"))
+        {
+            //print("hey!");
+            pianoPanel.GetComponent<PianoController>().cleanAll();
+        }
+
+        if (pianoPanel.activeSelf && Input.GetButtonDown("Share"))
+        {
+            //print("hey!");
+            pianoPanel.GetComponent<PianoController>().undo();
+        }
+
 
         if (!objectNavigationMode && (Input.GetAxis("LeftHorizontal") != 0 || Input.GetAxis("LeftVertical") != 0) && soundObjManager.getNumOfSounds() > 0)
             setCursorNavigationMode(true);
