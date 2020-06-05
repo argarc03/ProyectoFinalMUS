@@ -33,7 +33,7 @@ public class SoundObjectManager : MonoBehaviour
 
         if (soundObjects[y, x] == null)
         {
-            OSCHandler.Instance.SendMessageToClient("SuperCollider", name, 1.0, soundCounter);
+            OSCHandler.Instance.SendMessageToClient("SuperCollider", name, 1.0, soundCounter, -1);
 
             soundObjects[y, x] = Instantiate(soundObj, new Vector3(x + 1, 0, -y), Quaternion.identity);
             objectTypes[y, x] = name;
@@ -48,7 +48,7 @@ public class SoundObjectManager : MonoBehaviour
     {
         if (soundObjects[y, x] != null)
         {
-            OSCHandler.Instance.SendMessageToClient("SuperCollider", objectTypes[y, x], -1.0, x + y*height);
+            OSCHandler.Instance.SendMessageToClient("SuperCollider", objectTypes[y, x], -1.0, x + y*height, -1);
 
             Destroy(soundObjects[y, x]);
             soundObjects[y, x] = null;
