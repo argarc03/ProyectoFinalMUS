@@ -21,7 +21,6 @@ public class DrumController : MonoBehaviour
 
     void Start()
     {
-        print("CONTROLLING DRUMS");
     }
 
     void FixedUpdate()
