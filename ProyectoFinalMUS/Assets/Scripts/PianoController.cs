@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PianoController : MonoBehaviour
 {
+    public bool pianoActive = false;
+
     bool pianoPlaying = false;
 
     public GameObject timeBar;
@@ -21,9 +23,12 @@ public class PianoController : MonoBehaviour
 
     void FixedUpdate()
     {
-        handleInput();
-        createItem();
-        updateTime();
+        if (pianoActive)
+        {
+            handleInput();
+            createItem();
+            updateTime();
+        }
     }
 
     void createItem()

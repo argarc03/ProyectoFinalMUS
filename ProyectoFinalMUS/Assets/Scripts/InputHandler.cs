@@ -39,6 +39,11 @@ public class InputHandler : MonoBehaviour
 
     GameObject selectedSoundObject = null;
 
+    // Piano
+
+    public GameObject pianoPanel;
+    public GameObject drumsPanel;
+
     // Use this for initialization
     void Start()
     {
@@ -180,6 +185,13 @@ public class InputHandler : MonoBehaviour
         }
     }
 
+    public void openPiano(string name)
+    {
+
+        pianoPanel.SetActive(true);
+        pianoPanel.GetComponent<PianoController>().pianoActive = true;
+
+    }
 
     // Add a synth to the scene
     public void AddSynth(string name)
