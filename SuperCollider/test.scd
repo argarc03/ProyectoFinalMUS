@@ -6,6 +6,20 @@ play{SinOsc.ar(OnePole.ar(Mix(
 	LFSaw.ar([1,0.99],[0,0.6],2000,2000).trunc([400,600])*[1,-1]
 ),0.98)).dup*0.1}
 
+
+// DRUM BUFFERS
+
+(
+d = Dictionary.new;
+d.add(\drums -> PathName("Audio/Drums/").entries.collect({
+	arg sf;
+	Buffer.read(s, sf.fullPath);
+    })
+)
+)
+
+d[\drums].choose.play;
+
 // SAMPLERS DEFINITIONS----
 
 // Piano preview
@@ -25,6 +39,31 @@ SynthDef(\piano,
 }).add;
 )
 
+// Drums
+(
+SynthDef.new(\drumbuf, {
+	arg buf = 0, rate = 1, amp = 1;
+	var sig;
+	sig = PlayBuf.ar(2, buf, BufRateScale.ir(buf) * rate, doneAction:2); // DoneAction 2 = free the synth when done
+	sig = sig*amp;
+	Out.ar(0, sig);
+}).add;
+)
+
+(
+Pdef(
+	\drumRhythm,
+	Pbind(
+		\instrument, \drumbuf,
+		\delta, Prand([0.5],inf),
+		\buf, Prand(d[\drums], inf),
+		\rate, 1,
+		\amp, 0.5,
+	);
+).play;
+)
+
+\drumRhythm.
 
 // Sin
 (
