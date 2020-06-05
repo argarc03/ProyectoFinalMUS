@@ -242,13 +242,28 @@ public class OSCHandler : MonoBehaviour
     /// <param name="value">
     /// A <see cref="T"/>
     /// </param>
-    public void SendMessageToClient<T>(string clientId, string address, T value, float freq)
+    public void SendMessageToClient<T>(string clientId, string address, T value, int index, float freq)
     {
         List<object> temp = new List<object>();
         temp.Add(value);
+        temp.Add(index);
         temp.Add(freq);
-
         SendMessageToClient(clientId, address, temp);
+    }
+
+
+    /// <summary>
+    /// Moves sound located in array[index] to array[newIndex]
+    /// </summary>
+    /// <param name="clientId"></param>
+    /// <param name="index"></param>
+    /// <param name="newIndex"></param>
+    public void SendSoundMoveMessage(string clientId, int index, int newIndex)
+    {
+        List<object> temp = new List<object>();
+        temp.Add(index);
+        temp.Add(newIndex);
+        SendMessageToClient(clientId, "/move", temp);
     }
 
     /// <summary>
