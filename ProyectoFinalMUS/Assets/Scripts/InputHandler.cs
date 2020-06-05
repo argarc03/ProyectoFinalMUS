@@ -164,7 +164,7 @@ public class InputHandler : MonoBehaviour
 
         if (dirY == prevDirY)
             dirY = 0;
-        else prevDirX = dirY;
+        else prevDirY = dirY;
 
         int newCursorX = cursorX, newCursorY = cursorY;
         GameObject selectedGO = null;

@@ -1,11 +1,11 @@
 s.boot
 
 // TEST
-(
+
 play{SinOsc.ar(OnePole.ar(Mix(
 	LFSaw.ar([1,0.99],[0,0.6],2000,2000).trunc([400,600])*[1,-1]
 ),0.98)).dup*0.1}
-)
+
 
 // DRUM BUFFERS
 
@@ -57,13 +57,12 @@ Pdef(
 		\instrument, \drumbuf,
 		\delta, Prand([0.5],inf),
 		\buf, Prand(d[\drums], inf),
-		\rate, 0.1,
+		\rate, 1,
 		\amp, 0.5,
 	);
 ).play;
 )
 
-\drumRhythm.
 
 // Sin
 (
@@ -143,25 +142,24 @@ OSCdef.new(
 (
 var drum = nil;
 OSCdef.new(
-    \drumPrev,
-    {arg msg;
-        [msg].postln;
+	\drumPrev,
+	{arg msg;
+		[msg].postln;
 
-        if ( [msg][0][1] == -1.0)
-        {
-            drum.free();
-            drum = nil;
-        }
-        {
-            drum = Synth(\drumbuf, [\buf, d[\drums][[msg][0][2]]])
-        }
-    },
-    '/drumPrev',
-    nil, 57120
+		if ( [msg][0][1] == -1.0)
+		{
+			drum.free();
+			drum = nil;
+		}
+		{
+			drum = Synth(\drumbuf, [\buf, d[\drums][[msg][0][2]]])
+		}
+	},
+	'/drumPrev',
+	nil, 57120
 );
 )
 
-(
 var objects = Array.newClear(indexedSize: 50);
 
 // Sin
@@ -182,6 +180,7 @@ OSCdef.new(
 	'/sin',
 	nil, 57120
 );
+
 // Square
 
 OSCdef.new(
@@ -214,4 +213,5 @@ OSCdef.new(
 	'/move',
 	nil, 57120
 );
+
 )
