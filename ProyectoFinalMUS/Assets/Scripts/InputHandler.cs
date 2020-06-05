@@ -56,6 +56,13 @@ public class InputHandler : MonoBehaviour
 
     void Update()
     {
+        // UPDATE PIANO PANEL
+        if( pianoPanel.activeSelf && Input.GetAxis("LeftBumper") != 0)
+        {
+            closePiano();
+        }
+
+
         if (!objectNavigationMode && (Input.GetAxis("LeftHorizontal") != 0 || Input.GetAxis("LeftVertical") != 0) && soundObjManager.getNumOfSounds() > 0)
             setCursorNavigationMode(true);
         else if (objectNavigationMode && (Input.GetButtonDown("Button B") || soundObjManager.getNumOfSounds() == 0))
@@ -222,12 +229,17 @@ public class InputHandler : MonoBehaviour
         }
     }
 
+    void closePiano()
+    {
+        pianoPanel.SetActive(false);
+        pianoPanel.GetComponent<PianoController>().deactivatePiano(); //pianoActive = false;
+    }
+
     public void openPiano(string name)
     {
-
         pianoPanel.SetActive(true);
         pianoPanel.GetComponent<PianoController>().pianoActive = true;
-
+        // utilizar el parametro name para indicar el instrumento deseado
     }
 
     // Add a synth to the scene

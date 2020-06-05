@@ -16,6 +16,8 @@ public class PianoController : MonoBehaviour
     bool instantiateItem = false;
     int itemY = 0;
 
+    List<GameObject> itemsGO = new List<GameObject>();
+
     List<Vector3> items = new List<Vector3>(); // time pos, freq, start/stop
     Vector3 item;
     int i = 0;
@@ -36,6 +38,18 @@ public class PianoController : MonoBehaviour
         }
     }
 
+    public void deactivatePiano()
+    {
+        pianoActive = false;
+        pianoPlaying = false;
+
+        OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", -1, -1, -1);
+        items.Clear();
+        foreach(GameObject go in itemsGO)
+            Destroy(go);
+        itemsGO.Clear();
+    }
+
     void playItems()
     {
         if ( i < items.Count && (time <= items[i].x + 0.01f && time >= items[i].x - 0.01f))
@@ -43,7 +57,7 @@ public class PianoController : MonoBehaviour
             OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", items[i].z, -1, items[i].y);
             i++;
         }
-        if (i < items.Count) { print(items[i].x); print(time); }
+        //if (i < items.Count) { print(items[i].x); print(time); }
     }
 
     void createItem()
@@ -52,7 +66,7 @@ public class PianoController : MonoBehaviour
         {
             Vector3 itemPos = timeBar.transform.position;
             itemPos.y = itemY * 20 + 36;
-            Instantiate(pianoItem, itemPos, Quaternion.identity, transform.parent);
+            itemsGO.Add(Instantiate(pianoItem, itemPos, Quaternion.identity, transform.parent));
         }
     }
 
