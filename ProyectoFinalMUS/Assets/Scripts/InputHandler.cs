@@ -9,6 +9,8 @@ public class InputHandler : MonoBehaviour
     // Samplers menu & buttons
     public GameObject panelSamplers;
     public List<GameObject> buttonsSampler = new List<GameObject>();
+    public GameObject selector;
+    float angleSector;
     //int currentSelected = 0;
 
     // FX menu & buttons
@@ -49,15 +51,18 @@ public class InputHandler : MonoBehaviour
     {
         EventSystem.current.SetSelectedGameObject(null, null);
         panelSamplers.SetActive(false);
+        selector.SetActive(false);
         panelFX.SetActive(false);
         objectCursor.SetActive(false);
-        // Calculate 
+
+        // Calculate radialUI angle
+        angleSector = 90 / buttonsSampler.Count;
     }
 
     void Update()
     {
         // UPDATE PIANO PANEL
-        if( pianoPanel.activeSelf && Input.GetAxis("LeftBumper") != 0)
+        if (pianoPanel.activeSelf && Input.GetAxis("LeftBumper") != 0)
         {
             closePiano();
         }
@@ -94,7 +99,7 @@ public class InputHandler : MonoBehaviour
         if (Input.GetAxis("RightTrigger") != 0)
         {
             panelSamplers.SetActive(true);
-            if(objectNavigationMode)
+            if (objectNavigationMode)
                 setCursorNavigationMode(false);
         }
         else
@@ -116,21 +121,45 @@ public class InputHandler : MonoBehaviour
         float angle = Mathf.Atan2(posX, posY) * Mathf.Rad2Deg;
         //print(angle);
 
-        if (angle == 0)
+        if (angle == 0 || -angle > buttonsSampler.Count * angleSector)
         {
             EventSystem.current.SetSelectedGameObject(null, null);
             selectedSample = null;
+            selector.SetActive(false);
         }
-        else if (angle < 0)
+        else
+        {
+            int j = buttonsSampler.Count;
+            while (j >= 0 && -angle <= angleSector * j)
+            {
+                j--;
+            }
+            //print(j);
+            //print(angleSector*j);
+            //print(-angle);
+            if (j >= 0 && j < buttonsSampler.Count)
+            {
+                EventSystem.current.SetSelectedGameObject(buttonsSampler[j], null);
+                selectedSample = buttonsSampler[j];
+                selector.SetActive(true);
+                selector.transform.rotation = Quaternion.Euler(0, 0, angleSector * j - 45f + 9);
+            }
+
+        }
+
+        //selector.transform.rotation = Quaternion.Euler(0, 0, -45f + 9);
+
+        /*if (angle < 0)
         {
             EventSystem.current.SetSelectedGameObject(buttonsSampler[0], null);
             selectedSample = buttonsSampler[0];
+            selector.SetActive(true);
         }
         else
         {
             EventSystem.current.SetSelectedGameObject(buttonsSampler[1], null);
             selectedSample = buttonsSampler[1];
-        }
+        }*/
 
         // UPDATE FX PANEL-----------
         // Show/hide the samplers panel
@@ -200,7 +229,7 @@ public class InputHandler : MonoBehaviour
             while (newCursorX >= 0 && newCursorX < soundObjManager.width && selectedGO == null)
             {
                 selectedGO = soundObjects[newCursorY, newCursorX];
-                if(selectedGO == null) newCursorX += dirX;
+                if (selectedGO == null) newCursorX += dirX;
             }
 
             cursorUpdated = true;

@@ -74,9 +74,9 @@
     <Compile Include="Assets\Scripts\DrumController.cs" />
     <Compile Include="Assets\Scripts\InputHandler.cs" />
     <Compile Include="Assets\Scripts\PianoController.cs" />
+    <Compile Include="Assets\Scripts\Sound.cs" />
     <Compile Include="Assets\Scripts\SoundObjectManager.cs" />
     <Compile Include="Assets\Scripts\TimeController.cs" />
-    <Compile Include="Assets\Sound.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/hlocal/MUS/ProyectoFinal/ProyectoFinalMUS/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
