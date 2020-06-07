@@ -208,7 +208,7 @@ GameObject:
   - component: {fileID: 245629892}
   - component: {fileID: 245629891}
   m_Layer: 5
-  m_Name: SinButton (2)
+  m_Name: ViolinButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -285,7 +285,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: /sin
+          m_StringArgument: /violin
           m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
@@ -421,7 +421,7 @@ GameObject:
   - component: {fileID: 407203943}
   - component: {fileID: 407203942}
   m_Layer: 5
-  m_Name: SinText
+  m_Name: GuitarText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -479,7 +479,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: NULL
+  m_Text: GUITAR
 --- !u!222 &407203943
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -734,7 +734,7 @@ GameObject:
   - component: {fileID: 514905501}
   - component: {fileID: 514905504}
   - component: {fileID: 514905503}
-  - component: {fileID: 514905502}
+  - component: {fileID: 514905505}
   m_Layer: 5
   m_Name: Piano Panel
   m_TagString: Untagged
@@ -766,27 +766,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 165.5, y: 112}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &514905502
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 514905500}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e058d25ff9ba8514495ba81febeea78a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pianoActive: 0
-  name: 
-  timeBar: {fileID: 115891483}
-  pianoItem: {fileID: 6404934460121445726, guid: 40927279aee515d44925601c914cfae5,
-    type: 3}
-  timeControl: {fileID: 963194232}
-  soundObj: {fileID: 8742112871038246639, guid: 95449544c822a8144b496ddc73897ebe,
-    type: 3}
-  soundObjManager: {fileID: 1684953576}
 --- !u!114 &514905503
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -825,6 +804,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 514905500}
   m_CullTransparentMesh: 0
+--- !u!114 &514905505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514905500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e92d42f46b6fd4246a4f5b99518ecb9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pianoActive: 0
+  name: 
+  timeBar: {fileID: 115891483}
+  pianoItem: {fileID: 6404934460121445726, guid: 40927279aee515d44925601c914cfae5,
+    type: 3}
+  timeControl: {fileID: 963194232}
+  soundObj: {fileID: 8742112871038246639, guid: 95449544c822a8144b496ddc73897ebe,
+    type: 3}
+  soundObjManager: {fileID: 1684953576}
+  values: []
+  sinData: {fileID: 11400000, guid: 33fd4da9ac382ee429bbf2c8de3d3259, type: 2}
+  squareData: {fileID: 11400000, guid: 11556bc30fe117a4e8575b476fb6a48e, type: 2}
+  percussionData: {fileID: 11400000, guid: b6550a79db8eaea4481e5cf74c989abc, type: 2}
+  pianoData: {fileID: 11400000, guid: 887ea2a51146efe4484167f47b010e0f, type: 2}
 --- !u!1 &628321779
 GameObject:
   m_ObjectHideFlags: 0
@@ -1234,7 +1239,7 @@ GameObject:
   - component: {fileID: 756163454}
   - component: {fileID: 756163453}
   m_Layer: 5
-  m_Name: SquareButton
+  m_Name: PianoButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1304,14 +1309,14 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 963194231}
-        m_MethodName: AddSynth
+        m_MethodName: openPiano
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: /square
+          m_StringArgument: /piano
           m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
@@ -1734,7 +1739,7 @@ GameObject:
   - component: {fileID: 1065531119}
   - component: {fileID: 1065531118}
   m_Layer: 5
-  m_Name: SinButton (3)
+  m_Name: GuitarButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1811,7 +1816,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: /sin
+          m_StringArgument: /guitar
           m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
@@ -2117,7 +2122,7 @@ GameObject:
   - component: {fileID: 1448517217}
   - component: {fileID: 1448517216}
   m_Layer: 5
-  m_Name: SinText
+  m_Name: ViolinText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2175,7 +2180,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: NULL
+  m_Text: VIOLIN
 --- !u!222 &1448517217
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2196,7 +2201,7 @@ GameObject:
   - component: {fileID: 1464079048}
   - component: {fileID: 1464079047}
   m_Layer: 5
-  m_Name: SinText
+  m_Name: PercText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2254,7 +2259,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: NULL
+  m_Text: PERC
 --- !u!222 &1464079048
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2502,7 +2507,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0.19999695, y: -0.3999939}
+  m_AnchoredPosition: {x: 0.2000122, y: -0.3999939}
   m_SizeDelta: {x: 160, y: 160}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1829702436
@@ -2846,7 +2851,7 @@ GameObject:
   - component: {fileID: 2003038929}
   - component: {fileID: 2003038928}
   m_Layer: 5
-  m_Name: SquareText
+  m_Name: PianoText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2904,7 +2909,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: SQUA
+  m_Text: PIANO
 --- !u!222 &2003038929
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3001,7 +3006,7 @@ GameObject:
   - component: {fileID: 2072551336}
   - component: {fileID: 2072551335}
   m_Layer: 5
-  m_Name: SinButton (1)
+  m_Name: PercussionButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3058,7 +3063,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: /sin
+          m_StringArgument: /drums
           m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,

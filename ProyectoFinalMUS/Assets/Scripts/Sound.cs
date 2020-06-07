@@ -26,7 +26,7 @@ public class Sound : MonoBehaviour
     {
         if (i < items.Count && (timeControl.time <= items[i].x + 0.01f && timeControl.time >= items[i].x - 0.01f))
         {
-            OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", items[i].z, -1, items[i].y);
+            OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, items[i].z, items[i].y);
             i++;
         }
     }

@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63505a78d6f303a48ab07c633e26f6ee, type: 3}
+  m_Name: Sin Data
+  m_EditorClassIdentifier: 
+  instrumentName: /sin
+  ButtonIndexes: '0 -> RIGHT
+
+    1 -> LEFT
+
+    2 -> UP
+
+    3 -> DOWN
+
+    4 -> Y
+
+    5 -> X
+
+    6 -> A
+
+    7 -> B
+
+'
+  values:
+  - 349.23
+  - 293.66
+  - 261.63
+  - 329.63
+  - 392
+  - 440
+  - 493.88
+  - 523.25

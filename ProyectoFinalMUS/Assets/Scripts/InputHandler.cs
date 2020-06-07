@@ -69,17 +69,17 @@ public class InputHandler : MonoBehaviour
 
         if (pianoPanel.activeSelf && Input.GetButtonDown("Options"))
         {
-            pianoPanel.GetComponent<PianoController>().cleanAll();
+            pianoPanel.GetComponent<RecordingController>().cleanAll();
         }
 
         if (pianoPanel.activeSelf && Input.GetButtonDown("Share"))
         {
-            pianoPanel.GetComponent<PianoController>().undo();
+            pianoPanel.GetComponent<RecordingController>().undo();
         }
 
         if (pianoPanel.activeSelf && Input.GetAxis("RightBumper") != 0)
         {
-            pianoPanel.GetComponent<PianoController>().acceptCreation();
+            pianoPanel.GetComponent<RecordingController>().acceptCreation();
             closePiano();
         }
 
@@ -277,14 +277,13 @@ public class InputHandler : MonoBehaviour
     void closePiano()
     {
         pianoPanel.SetActive(false);
-        pianoPanel.GetComponent<PianoController>().deactivatePiano(); //pianoActive = false;
+        pianoPanel.GetComponent<RecordingController>().deactivatePiano(); //pianoActive = false;
     }
 
     public void openPiano(string name)
     {
         pianoPanel.SetActive(true);
-        pianoPanel.GetComponent<PianoController>().pianoActive = true;
-        // utilizar el parametro name para indicar el instrumento deseado
+        pianoPanel.GetComponent<RecordingController>().init(name);
     }
 
     // Add a synth to the scene
