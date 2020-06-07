@@ -96,7 +96,7 @@ public class InputHandler : MonoBehaviour
 
         // UPDATE SAMPLERS PANEL-------------
         // Show/hide the samplers panel
-        if (Input.GetAxis("RightTrigger") != 0)
+        if ( !pianoPanel.activeSelf && Input.GetAxis("RightTrigger") != 0)
         {
             panelSamplers.SetActive(true);
             if (objectNavigationMode)
@@ -142,7 +142,7 @@ public class InputHandler : MonoBehaviour
                 EventSystem.current.SetSelectedGameObject(buttonsSampler[j], null);
                 selectedSample = buttonsSampler[j];
                 selector.SetActive(true);
-                selector.transform.rotation = Quaternion.Euler(0, 0, angleSector * j - 45f + 9);
+                selector.transform.rotation = Quaternion.Euler(0, 0, angleSector * j - 45f + 9 + 5);
             }
 
         }
@@ -284,6 +284,8 @@ public class InputHandler : MonoBehaviour
     {
         pianoPanel.SetActive(true);
         pianoPanel.GetComponent<RecordingController>().init(name);
+
+        pianoPanel.GetComponent<RecordingController>().icon.sprite = selectedSample.GetComponent<Button>().image.sprite;
     }
 
     // Add a synth to the scene

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class RecordingController : MonoBehaviour
@@ -35,6 +36,9 @@ public class RecordingController : MonoBehaviour
     public InstrumentData percussionData; // PERCUSSION
     public InstrumentData pianoData; // PIANO
 
+    public Image icon;
+    public Text text;
+
     void Start()
     {
 
@@ -59,31 +63,39 @@ public class RecordingController : MonoBehaviour
         {
             case "/sin":
                 data = sinData;
+                text.text = "WAVE";
                 break;
             case "/square":
                 data = squareData;
+                text.text = "WAVE";
                 break;
             case "/drums":
                 data = percussionData;
+                text.text = "DRUMKIT";
                 break;
             case "/piano":
                 data = pianoData;
+                text.text = "PIANO";
                 break;
             case "/flute":
                 data = sinData;
                 data.instrumentName = "/flute";
+                text.text = "FLUTE";
                 break;
             case "/guitar":
                 data = sinData;
                 data.instrumentName = "/guitar";
+                text.text = "GUITAR";
                 break;
             case "/violin":
                 data = sinData;
                 data.instrumentName = "/violin";
+                text.text = "VIOLIN";
                 break;
             case "/bell":
                 data = sinData;
                 data.instrumentName = "/bell";
+                text.text = "BELLS";
                 break;
             default:
                 break;

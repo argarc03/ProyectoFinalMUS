@@ -81,7 +81,7 @@ SynthDef(\squareSynth,
 	{
 		arg out = 0,
 		freq = 440,
-		amp = 0.5,
+		amp = 0.2,
 		buffer = 0;
 		var signal;
 
@@ -155,7 +155,7 @@ SynthDef.new(\fluteSynth, { arg scl = 0.2, freq = 440, ipress = 0.9, ibreath = 0
 /**********************************************************************/
 // GUITAR
 (
-SynthDef.new(\guitarSynth, {arg amp = 0.1, freq = 440, decay = 5, coef = 0.1;
+SynthDef.new(\guitarSynth, {arg amp = 0.3, freq = 440, decay = 5, coef = 0.1;
 	var env, snd;
 	env = EnvGen.kr(Env.linen(0, decay, 0), doneAction: 2);
 	snd = Pluck.ar(
