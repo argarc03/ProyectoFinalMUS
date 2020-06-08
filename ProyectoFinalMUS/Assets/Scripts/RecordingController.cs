@@ -21,12 +21,14 @@ public class RecordingController : MonoBehaviour
     Vector3 item;
     int i = 0;
 
+    List<List<GameObject>> itemsGOSets = new List<List<GameObject>>();
+
     public TimeController timeControl;
 
     public GameObject soundObj;
     public SoundObjectManager soundObjManager;
 
-    
+
     public List<float> values;
 
     // Data of each instrument:
@@ -116,23 +118,19 @@ public class RecordingController : MonoBehaviour
     {
         if (items.Count != 0)
         {
-            // destroy the start and stop of the
+            // DESTROY LAST SOUND ITEM
+            // destroy the stop and start of the
             // last item added
             items.RemoveAt(items.Count - 1);
             items.RemoveAt(items.Count - 1);
 
+            // DESTROY LAST GAMEOBJECTS SET
             // remove all the instances of the last item added
             if (itemsGO.Count != 0)
             {
-                int k = itemsGO.Count - 1;
-                float posY = itemsGO[k].transform.position.y;
-
-                while (k >= 0 && itemsGO.Count != 0 && itemsGO[k].transform.position.y == posY)
-                {
-                    Destroy(itemsGO[k]);
-                    itemsGO.RemoveAt(k);
-                    k--;
-                }
+                foreach (GameObject go in itemsGOSets[itemsGOSets.Count-1])
+                    Destroy(go);
+                itemsGOSets.RemoveAt(itemsGOSets.Count - 1);
             }
         }
     }
@@ -161,10 +159,9 @@ public class RecordingController : MonoBehaviour
     {
         if (i < items.Count && (timeControl.time <= items[i].x + 0.01f && timeControl.time >= items[i].x - 0.01f))
         {
-            OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, items[i].z, items[i].y);// .SendMessageToClient("SuperCollider", "/piano", items[i].z, -1, items[i].y);
+            OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, items[i].z, items[i].y);
             i++;
         }
-        //if (i < items.Count) { print(items[i].x); print(time); }
     }
 
     void createItem()
@@ -173,7 +170,9 @@ public class RecordingController : MonoBehaviour
         {
             Vector3 itemPos = timeBar.transform.position;
             itemPos.y = itemY * 20 + 36;
-            itemsGO.Add(Instantiate(pianoItem, itemPos, Quaternion.identity, transform.parent));
+            GameObject go = Instantiate(pianoItem, itemPos, Quaternion.identity, transform.parent);
+            itemsGO.Add(go);
+            itemsGOSets[itemsGOSets.Count - 1].Add(go);
         }
     }
 
@@ -204,6 +203,7 @@ public class RecordingController : MonoBehaviour
                 item.y = values[0];
                 item.z = 1;
                 items.Add(item);
+                itemsGOSets.Add(new List<GameObject>());
             }
         }
         else if (DPADposX < 0) // LEFT
@@ -215,6 +215,7 @@ public class RecordingController : MonoBehaviour
                 item.y = values[1];
                 item.z = 1;
                 items.Add(item);
+                itemsGOSets.Add(new List<GameObject>());
             }
         }
         else if (DPADposY > 0) // UP
@@ -226,6 +227,7 @@ public class RecordingController : MonoBehaviour
                 item.y = values[2];
                 item.z = 1;
                 items.Add(item);
+                itemsGOSets.Add(new List<GameObject>());
             }
         }
         else if (DPADposY < 0) // DOWN
@@ -237,6 +239,7 @@ public class RecordingController : MonoBehaviour
                 item.y = values[3];
                 item.z = 1;
                 items.Add(item);
+                itemsGOSets.Add(new List<GameObject>());
             }
         }
         else if (Input.GetButton("Button Y")) // Y
@@ -248,6 +251,7 @@ public class RecordingController : MonoBehaviour
                 item.y = values[4];
                 item.z = 1;
                 items.Add(item);
+                itemsGOSets.Add(new List<GameObject>());
             }
         }
         else if (Input.GetButton("Button X")) // X
@@ -259,6 +263,7 @@ public class RecordingController : MonoBehaviour
                 item.y = values[5];
                 item.z = 1;
                 items.Add(item);
+                itemsGOSets.Add(new List<GameObject>());
             }
         }
         else if (Input.GetButton("Button A")) // A
@@ -270,6 +275,7 @@ public class RecordingController : MonoBehaviour
                 item.y = values[6];
                 item.z = 1;
                 items.Add(item);
+                itemsGOSets.Add(new List<GameObject>());
             }
         }
         else if (Input.GetButton("Button B")) // B
@@ -281,6 +287,7 @@ public class RecordingController : MonoBehaviour
                 item.y = values[7];
                 item.z = 1;
                 items.Add(item);
+                itemsGOSets.Add(new List<GameObject>());
             }
         }
         else
