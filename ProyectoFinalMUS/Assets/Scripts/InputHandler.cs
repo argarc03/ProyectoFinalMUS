@@ -96,7 +96,7 @@ public class InputHandler : MonoBehaviour
 
         // UPDATE SAMPLERS PANEL-------------
         // Show/hide the samplers panel
-        if( !panelSamplers.activeSelf && Input.GetAxis("RightTrigger") != 0)
+        if (!panelSamplers.activeSelf && Input.GetAxis("RightTrigger") != 0)
         {
             if (!audioUI.isPlaying)
                 audioUI.PlayOneShot(openWheelClip);
@@ -277,6 +277,16 @@ public class InputHandler : MonoBehaviour
             // TODO: Abrir un menú con las opciones (Silenciar, Mover, Eliminar...)
             // de momento: borrar el objeto
             if (soundObjects[cursorY, cursorX] != null) soundObjManager.removeSoundObject(cursorX, cursorY);
+        }
+        else if (selectedSoundObject == null && Input.GetButtonDown("Button X"))
+        {
+            if (soundObjects[cursorY, cursorX] != null)
+            {
+                if (soundObjects[cursorY, cursorX].GetComponent<Sound>().isMuted())
+                    soundObjManager.desmuteSoundObject(cursorX, cursorY);
+                else
+                    soundObjManager.muteSoundObject(cursorX, cursorY);
+            }
         }
 
         if (selectedSoundObject != null) return;

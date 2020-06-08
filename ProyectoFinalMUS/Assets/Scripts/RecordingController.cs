@@ -132,7 +132,7 @@ public class RecordingController : MonoBehaviour
             // remove all the instances of the last item added
             if (itemsGO.Count != 0)
             {
-                foreach (GameObject go in itemsGOSets[itemsGOSets.Count-1])
+                foreach (GameObject go in itemsGOSets[itemsGOSets.Count - 1])
                     Destroy(go);
                 itemsGOSets.RemoveAt(itemsGOSets.Count - 1);
             }
@@ -153,7 +153,8 @@ public class RecordingController : MonoBehaviour
                 Destroy(go);
             itemsGO.Clear();
 
-            audioUI.PlayOneShot(cleanClip, 0.7f);
+            if (pianoActive)
+                audioUI.PlayOneShot(cleanClip, 0.7f);
         }
     }
 

@@ -64,6 +64,48 @@ public class SoundObjectManager : MonoBehaviour
             print("Error: No object at given location\n");
     }
 
+    public void muteSoundObject(int x, int y)
+    {
+        if (soundObjects[y, x] != null)
+        {
+            //OSCHandler.Instance.SendMessageToClient("SuperCollider", objectTypes[y, x], -1.0, x + y * width, -1);
+
+
+            soundObjects[y, x].GetComponent<Sound>().mute();
+
+            /*Destroy(soundObjects[y, x]);
+            soundObjects[y, x] = null;
+            objectTypes[y, x] = null;
+            rearrangeObjects(x, y);
+            soundCounter--;*/
+
+            audioUI.PlayOneShot(removeClip);
+        }
+        else
+            print("Error: No object at given location\n");
+    }
+
+    public void desmuteSoundObject(int x, int y)
+    {
+        if (soundObjects[y, x] != null)
+        {
+            //OSCHandler.Instance.SendMessageToClient("SuperCollider", objectTypes[y, x], -1.0, x + y * width, -1);
+
+
+            soundObjects[y, x].GetComponent<Sound>().desmute();
+
+            /*Destroy(soundObjects[y, x]);
+            soundObjects[y, x] = null;
+            objectTypes[y, x] = null;
+            rearrangeObjects(x, y);
+            soundCounter--;*/
+
+            audioUI.PlayOneShot(removeClip);
+        }
+        else
+            print("Error: No object at given location\n");
+    }
+
     public GameObject[,] getSoundObjects()
     {
         return soundObjects;
