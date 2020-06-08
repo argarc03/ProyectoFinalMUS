@@ -273,6 +273,14 @@ public class OSCHandler : MonoBehaviour
         SendMessageToClient(clientId, "/move", temp);
     }
 
+    public void SendSoundVolumeMessage(string clientId, int index, float volume)
+    {
+        List<object> temp = new List<object>();
+        temp.Add(index);
+        temp.Add(volume);
+        SendMessageToClient(clientId, "/setVolume", temp);
+    }
+
     /// <summary>
     /// Sends an OSC message to a specified client, given its clientId (defined at the OSC client construction),
     /// OSC address and a list of values. Also updates the client log.

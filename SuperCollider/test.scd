@@ -748,7 +748,23 @@ OSCdef.new(
 		nil, 57120
 	);
 
+    // Change sound volume
 
+	OSCdef.new(
+		\setVolume,
+		{arg msg;
+			[msg].postln;
+			if([msg][0][2] == 0.0)
+			{
+				objects[[msg][0][1]].stop;
+			}
+			{
+				objects[[msg][0][1]].play;
+			}
+		},
+		'/setVolume',
+		nil, 57120
+	);
 
 	/******************************************************/
 	// PRESETS OSC

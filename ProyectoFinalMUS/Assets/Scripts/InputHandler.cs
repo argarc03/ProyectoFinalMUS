@@ -229,7 +229,7 @@ public class InputHandler : MonoBehaviour
         {
             if (soundObjects[cursorY, cursorX] != null)
             {
-                if (soundObjects[cursorY, cursorX].GetComponent<Sound>().isMuted())
+                if (soundObjManager.isMuted(cursorX, cursorY))
                     soundObjManager.desmuteSoundObject(cursorX, cursorY);
                 else
                     soundObjManager.muteSoundObject(cursorX, cursorY);

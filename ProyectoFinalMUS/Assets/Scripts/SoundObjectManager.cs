@@ -11,6 +11,7 @@ public class SoundObjectManager : MonoBehaviour
     // Sound Objects
     GameObject[,] soundObjects;
     string[,] objectTypes;
+    bool[,] muted;
 
     int soundCounter = 0;
 
@@ -22,6 +23,7 @@ public class SoundObjectManager : MonoBehaviour
     {
         soundObjects = new GameObject[height, width];
         objectTypes = new string[height, width];
+        muted = new bool[height, width];
         audioUI = GetComponent<AudioSource>();
     }
 
@@ -64,14 +66,16 @@ public class SoundObjectManager : MonoBehaviour
             print("Error: No object at given location\n");
     }
 
+    public bool isMuted(int x, int y)
+    {
+        return muted[y,x];
+    }
+
     public void muteSoundObject(int x, int y)
     {
         if (soundObjects[y, x] != null)
         {
             //OSCHandler.Instance.SendMessageToClient("SuperCollider", objectTypes[y, x], -1.0, x + y * width, -1);
-
-
-            soundObjects[y, x].GetComponent<Sound>().mute();
 
             /*Destroy(soundObjects[y, x]);
             soundObjects[y, x] = null;
@@ -79,6 +83,12 @@ public class SoundObjectManager : MonoBehaviour
             rearrangeObjects(x, y);
             soundCounter--;*/
 
+            Sound soundComp = soundObjects[y, x].GetComponent<Sound>();
+            if(soundComp != null)
+                soundComp.mute();
+            else
+                OSCHandler.Instance.SendSoundVolumeMessage("SuperCollider", x + (y * width), 0.0f);
+            muted[y, x] = true;
             audioUI.PlayOneShot(removeClip);
         }
         else
@@ -91,15 +101,18 @@ public class SoundObjectManager : MonoBehaviour
         {
             //OSCHandler.Instance.SendMessageToClient("SuperCollider", objectTypes[y, x], -1.0, x + y * width, -1);
 
-
-            soundObjects[y, x].GetComponent<Sound>().desmute();
-
             /*Destroy(soundObjects[y, x]);
             soundObjects[y, x] = null;
             objectTypes[y, x] = null;
             rearrangeObjects(x, y);
             soundCounter--;*/
 
+            Sound soundComp = soundObjects[y, x].GetComponent<Sound>();
+            if (soundComp != null)
+                soundComp.desmute();
+            else
+                OSCHandler.Instance.SendSoundVolumeMessage("SuperCollider", x + (y * width), 1.0f);
+            muted[y, x] = false;
             audioUI.PlayOneShot(removeClip);
         }
         else
