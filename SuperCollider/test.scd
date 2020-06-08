@@ -39,7 +39,23 @@ hhat = d[\drums][3],
 kick = d[\drums][4],
 mTom = d[\drums][5],
 ride = d[\drums][6],
-snare = d[\drums][7];
+snare = d[\drums][7],
+do = 261.63,
+re = 293.66,
+mi = 329.63,
+fa = 349.23,
+sol = 392,
+la = 440,
+si = 493.88,
+doA = 523.25,
+dor = 1.059463**(-9),
+rer = 1.059463**(-7),
+mir = 1.059463**(-5),
+far = 1.059463**(-4),
+solr = 1.059463**(-2),
+lar = 1.059463**(0),
+sir = 1.059463**(2),
+doAr = 1.059463**(3);
 
 
 SynthDef(\sinSynth,
@@ -345,23 +361,26 @@ SynthDef.new(\pianoBuf, {
 /******************************************/
 //                 PRESETS                //
 /******************************************/
+
+
 // Bell Preset
 Pdef.new(
 	\bellPdef,
 	Pbind(
 	    \instrument, \bellSynth,
-		\dur, Pseq([2.2,2.2,2.05,2.2,2.2,2.2,2.05,2.2],inf),//Pseq([1/160], inf),
-		\scale, Scale.minor,
-		\degree, Pseq([3,1,2,3,3,3,2,1],inf),
-		\octave, 6,
+		\dur, Pseq([1],inf),//Pseq([1/160], inf),
+		\scale, Scale.major,
+		\degree, Pseq([1,3,2,3,4,2,4,1],inf),
+		\octave, 7,
 	    //\delta, Pseq([1.20], inf),
 	);
 );
 
-// Rhythm Preset
 
+// Rhythm Presets
+//1
 Pdef.new(
-	\drumPdef,
+	\drumPdef1,
 	Pbind(
 	    \instrument, \drumBuf,
 	    \dur, Pseq([1/16], inf),
@@ -373,6 +392,80 @@ Pdef.new(
 	);
 );
 
+//2
+Pdef.new(
+	\drumPdef2,
+	Pbind(
+	    \instrument, \drumBuf,
+	    \dur, Pseq([1,1,1/2,1/4,1/4,1], inf),
+		//\stretch, 60/210 * 4,
+		\buf, Pseq([kick, hTom, fTom,mTom,mTom, [ride,mTom]],inf),
+	    //\delta, Pseq([0.20], inf),
+	    \rate, 1,
+	    \amp, 0.35,
+	);
+);
+
+
+// Flute Preset
+
+Pdef.new(
+	\flutePdef,
+	Pbind(
+	    \instrument, \fluteSynth,
+	    \dur, 1,//Pseq([1/16], inf),
+		//\stretch, 60/120 * 4,
+		\freq, Pseq([[do, mi, sol],mi,fa,do,[fa, la, doA],mi,fa, doA],inf),
+	    //\delta, Pseq([0.70], inf),
+	    //\rate, 1,
+	    \amp, 0.35,
+	);
+);
+
+
+// Guitar Preset
+
+Pdef.new(
+	\guitarPdef,
+	Pbind(
+	    \instrument, \guitarSynth,
+	    \dur, Pseq([1,1,0.5,0.5,1], inf),
+		//\stretch, 60/120 * 4,
+		\freq, Pseq([[fa, la, doA],[mi,sol,si],mi,fa,[do, mi, sol, si]],inf),
+	    //\delta, Pseq([0.70], inf),
+	    //\rate, 1,
+	    \amp, 0.35,
+	);
+);
+
+
+// Piano Preset
+
+Pdef.new(
+	\pianoPdef,
+	Pbind(
+	    \instrument, \pianoBuf,
+		\buf, d[\piano][0],
+		\dur, Pseq([1,1,1,1/2,1/2,1,1,1,1/2,1/2],inf),
+		\rate, Pseq([[dor,mir,solr],mir,solr,sir,sir,[rer, far, lar], far, lar,sir,lar],inf),
+	    \amp, 0.35,
+	);
+);
+
+
+// Violin Preset
+
+Pdef.new(
+	\violinPdef,
+	Pbind(
+	    \instrument, \violinSynth,
+		\dur, Pseq([1,1/2,1/2,1,1/2,1/2], inf),
+		\freq, Pseq([doA, sol, fa, si,  fa, sol],inf),
+		//\delta, Pseq([0.70], inf),
+	    //\rate, 1,
+	    \amp, 0.35,
+	);
+)
 )
 
 /**********************************************************/
@@ -380,7 +473,9 @@ Pdef.new(
 /********************************************************/
 
 
+Pdef(\bellPdef).play;
 
+Pdef(\bellPdef).stop;
 
 /**********************************************************/
 //                     OSC DEFINITIONS                   //
@@ -661,7 +756,7 @@ OSCdef.new(
 
 	// Rhythm 1 preset
 	OSCdef.new(
-		\drumPreset,
+		\drumPreset1,
 		{arg msg;
 			[msg].postln;
 
@@ -673,10 +768,31 @@ OSCdef.new(
 				objects[[msg][0][2]] = nil;
 			}
 			{
-				objects[[msg][0][2]] = Pdef(\drumPdef).play;
+				objects[[msg][0][2]] = Pdef(\drumPdef1).play;
 			}
 		},
-		'/drumPreset',
+		'/drumPreset1',
+		nil, 57120
+	);
+
+    // Rhythm 2 preset
+	OSCdef.new(
+		\drumPreset2,
+		{arg msg;
+			[msg].postln;
+
+
+			if ( [msg][0][1] == -1.0)
+			{
+			    objects[[msg][0][2]].stop;
+				objects[[msg][0][2]].free();
+				objects[[msg][0][2]] = nil;
+			}
+			{
+				objects[[msg][0][2]] = Pdef(\drumPdef2).play;
+			}
+		},
+		'/drumPreset2',
 		nil, 57120
 	);
 
@@ -698,6 +814,90 @@ OSCdef.new(
 			}
 		},
 		'/bellPreset',
+		nil, 57120
+	);
+
+    // FLUTE preset
+    OSCdef.new(
+		\flutePreset,
+		{arg msg;
+			[msg].postln;
+
+
+			if ( [msg][0][1] == -1.0)
+			{
+			    objects[[msg][0][2]].stop;
+				objects[[msg][0][2]].free();
+				objects[[msg][0][2]] = nil;
+			}
+			{
+				objects[[msg][0][2]] = Pdef(\flutePdef).play;
+			}
+		},
+		'/flutePreset',
+		nil, 57120
+	);
+
+    // GUITAR preset
+    OSCdef.new(
+		\guitarPreset,
+		{arg msg;
+			[msg].postln;
+
+
+			if ( [msg][0][1] == -1.0)
+			{
+			    objects[[msg][0][2]].stop;
+				objects[[msg][0][2]].free();
+				objects[[msg][0][2]] = nil;
+			}
+			{
+				objects[[msg][0][2]] = Pdef(\guitarPdef).play;
+			}
+		},
+		'/guitarPreset',
+		nil, 57120
+	);
+
+    // PIANO preset
+    OSCdef.new(
+		\pianoPreset,
+		{arg msg;
+			[msg].postln;
+
+
+			if ( [msg][0][1] == -1.0)
+			{
+			    objects[[msg][0][2]].stop;
+				objects[[msg][0][2]].free();
+				objects[[msg][0][2]] = nil;
+			}
+			{
+				objects[[msg][0][2]] = Pdef(\pianoPdef).play;
+			}
+		},
+		'/pianoPreset',
+		nil, 57120
+	);
+
+    // VIOLIN preset
+    OSCdef.new(
+		\violinPreset,
+		{arg msg;
+			[msg].postln;
+
+
+			if ( [msg][0][1] == -1.0)
+			{
+			    objects[[msg][0][2]].stop;
+				objects[[msg][0][2]].free();
+				objects[[msg][0][2]] = nil;
+			}
+			{
+				objects[[msg][0][2]] = Pdef(\violinPdef).play;
+			}
+		},
+		'/violinPreset',
 		nil, 57120
 	);
 )
@@ -784,6 +984,29 @@ Pdef(
 
 
 (
+Pdef.new(
+	\test,
+	Pbind(
+	    \instrument, \sinSynth,
+		\dur, Pseq([2.2,2.2,2.05,2.2,2.2,2.2,2.05,2.2],inf),//Pseq([1/160], inf),
+		\scale, Scale.minor,
+		\degree, Pseq([3,1,2,3,3,3,2,1],inf),
+		\octave, 6,
+	    //\delta, Pseq([1.20], inf),
+	);
+)
+)
+var test = Pdef(\test).play;
+
+test.free();
+test = nil;
+
+
+p.stop;
+
+
+// R1
+(
 var crash = d[\drums][0],
 fTom = d[\drums][1],
 hTom = d[\drums][2],
@@ -795,39 +1018,47 @@ snare = d[\drums][7];
 Pdef.new(
 	\test,
 	Pbind(
-	    \instrument, \bellSynth,
-		\dur, Pseq([2.2,2.2,2.05,2.2,2.2,2.2,2.05,2.2],inf),//Pseq([1/160], inf),
-		\scale, Scale.minor,
-		\degree, Pseq([3,1,2,3,3,3,2,1],inf),
-		\octave, 6,
-	    //\delta, Pseq([1.20], inf),
+	    \instrument, \drumBuf,
+	    \dur, Pseq([1,1,1/2,1/4,1/4,1], inf),
+		//\stretch, 60/210 * 4,
+		\buf, Pseq([kick, hTom, fTom,mTom,mTom, [ride,mTom]],inf),
+	    //\delta, Pseq([0.20], inf),
+	    \rate, 1,
+	    \amp, 0.35,
 	);
 )
 )
-var test = Pdef(\test).stop;
 
-test.free();
-test = nil;
+Pdef(\test).play;
 
-
-p.stop;
+Pdef(\test).stop;
 
 
-// R1
-PDef(
+(
+var do = 261.63,
+re = 293.66,
+mi = 329.63,
+fa = 349.23,
+sol = 392,
+la = 440,
+si = 493.88,
+doA = 523.25;
+Pdef.new(
 	\test,
 	Pbind(
-	    \instrument, \drumBuf,
-	    \dur, Pseq([1/16], inf),
-		\stretch, 60/120 * 4,
-	    \buf, Pseq([kick,hhat,hhat,snare,hhat,kick,ride,ride,ride],inf),
-	    \delta, Pseq([0.20], inf),
-	    \rate, 1,
+	    \instrument, \violinSynth,
+		\dur, Pseq([1,1/2,1/2,1,1/2,1/2], inf),
+		\freq, Pseq([doA, sol, fa, si,  fa, sol],inf),
+		//\delta, Pseq([0.70], inf),
+	    //\rate, 1,
 	    \amp, 0.35,
-).play;
+	);
+)
 )
 
+Pdef(\test).play;
 
+Pdef(\test).stop;
 
 
 
