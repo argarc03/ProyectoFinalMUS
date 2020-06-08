@@ -1,13 +1,10 @@
 s.boot
 
-// TEST
-
-play{SinOsc.ar(OnePole.ar(Mix(
-	LFSaw.ar([1,0.99],[0,0.6],2000,2000).trunc([400,600])*[1,-1]
-),0.98)).dup*0.1}
 
 
-// DRUM BUFFERS
+/**********************************************************/
+//                     BUFFER DICTIONARY                 //
+/********************************************************/
 
 (
 d = Dictionary.new;
@@ -24,42 +21,27 @@ d.add(\piano -> PathName("Audio/Piano/").entries.collect({
 )
 )
 
-d[\piano].choose.play;
 
 
-//// PIANO TEST ////
-(
-Pdef(
-	\pianoRhythm,
-	Pbind(
-		\instrument, \pianoBuf,
-		\delta, Prand([0.5],inf),
-		\buf, d[\piano][0],
-		\rate, Pseq([1*(1.059463**(-9)),
-			1*(1.059463**(-8)),
-			//1*(1.059463**(-7)),
-			1*(1.059463**(-6)),
-			//1*(1.059463**(-5)),
-			1*(1.059463**(-4)),
-			1*(1.059463**(-3)),
-			//1*(1.059463**(-2)),
-			1*(1.059463**(-1)),
-			//1*(1.059463**(0)),
-			1*(1.059463**(1)),
-			1*(1.059463**(2)),
-			//1*(1.059463**(3))
-		],1),
-		\amp, 0.5,
-	);
-).play;
-)
-////////////////////////////
 
-// SYNTH DEFINITIONS----
+
+/**********************************************************/
+//                     SYNTH DEFINITIONS                 //
+/********************************************************/
 
 // Sin Synth
 
 (
+var crash = d[\drums][0],
+fTom = d[\drums][1],
+hTom = d[\drums][2],
+hhat = d[\drums][3],
+kick = d[\drums][4],
+mTom = d[\drums][5],
+ride = d[\drums][6],
+snare = d[\drums][7];
+
+
 SynthDef(\sinSynth,
 	{
 		arg out = 0,
@@ -72,11 +54,11 @@ SynthDef(\sinSynth,
 
 		Out.ar(out, signal*amp);
 }).add;
-)
+
 
 // Square Synth
 
-(
+
 SynthDef(\squareSynth,
 	{
 		arg out = 0,
@@ -89,12 +71,12 @@ SynthDef(\squareSynth,
 
 		Out.ar(out, signal*amp);
 }).add;
-)
+
 
 /**********************************************************************/
 // FLUTE
 // Originally found at http://ecmc.rochester.edu/ecmc/docs/supercollider/scbook/Ch21_Interface_Investigations/ixi%20SC%20tutorial/ixi_SC_tutorial_10.html
-(
+
 SynthDef.new(\fluteSynth, { arg scl = 0.2, freq = 440, ipress = 0.9, ibreath = 0.09, ifeedbk1 = 0.4, ifeedbk2 = 0.4, dur = 1, gate = 1, amp = 2;
 
 	var kenv1, kenv2, kenvibr, kvibr, sr, cr, block;
@@ -149,12 +131,12 @@ SynthDef.new(\fluteSynth, { arg scl = 0.2, freq = 440, ipress = 0.9, ibreath = 0
 	OffsetOut.ar( 0, [ signalOut * kenv2, signalOut * kenv2 ] );
 
 }).add;
-)
+
 /**********************************************************************/
 
 /**********************************************************************/
 // GUITAR
-(
+
 SynthDef.new(\guitarSynth, {arg amp = 0.3, freq = 440, decay = 5, coef = 0.1;
 	var env, snd;
 	env = EnvGen.kr(Env.linen(0, decay, 0), doneAction: 2);
@@ -167,12 +149,12 @@ SynthDef.new(\guitarSynth, {arg amp = 0.3, freq = 440, decay = 5, coef = 0.1;
 		coef: coef);
 	Out.ar(0, [snd, snd]);
 }).add;
-)
+
 /**********************************************************************/
 
 /**********************************************************************/
 // VIOLIN
-(
+
 /* Retrieved from
 http://sccode.org/1-5aD
 by nicolaariutti
@@ -202,14 +184,14 @@ SynthDef(\violinSynth, {
 	env = Env.adsr(att, dec, sus, rel).kr(gate: gate, doneAction: 2);
 
 	freq = Vibrato.kr(
-		            freq: freq,
-		            rate: vRate,
-		            depth: vDepth,
-	            	delay: (att + dec),
-		            onset: vAtt,
-		            rateVariation: vRateVar,
-		            depthVariation: vDepthVar
-            	);
+		freq: freq,
+		rate: vRate,
+		depth: vDepth,
+		delay: (att + dec),
+		onset: vAtt,
+		rateVariation: vRateVar,
+		depthVariation: vDepthVar
+	);
 
 	pwm = SinOsc.kr(freq: pwmRate, phase: Rand(0.0, 1.0)).range(pwmMin, pwmMax);
 	pwm = pwm * LFNoise2.kr(pwmVarRate).range(0.2, 0.8);
@@ -229,14 +211,14 @@ metadata: (
 	credit: "Original by nicolaariutti, modified by Josh Mitchell",
 	category: \strings,
 	tags: [\bowed, \pitched, \violin]
-	)
-).add;
 )
+).add;
+
 /**********************************************************************/
 
 /**********************************************************************/
 // BELLS
-(
+
 /*
 Retrieved from
 http://sccode.org/1-5aD
@@ -336,11 +318,11 @@ metadata: (
 	tags: [\percussion, \bell, \prayer, \tibetan]
 )
 ).add;
-)
+
 /**********************************************************************/
 
 // Drums
-(
+
 SynthDef.new(\drumBuf, {
 	arg buf = 0, rate = 1, amp = 1;
 	var sig;
@@ -348,10 +330,10 @@ SynthDef.new(\drumBuf, {
 	sig = sig*amp;
 	Out.ar(0, sig);
 }).add;
-)
+
 
 // Piano Buffer
-(
+
 SynthDef.new(\pianoBuf, {
 	arg buf = 0, rate = 1, amp = 1;
 	var sig;
@@ -359,23 +341,376 @@ SynthDef.new(\pianoBuf, {
 	sig = sig*amp;
 	Out.ar(0, sig);
 }).add;
-)
 
-///// DRUMS TEST
-(
-Pdef(
-	\drumRhythm,
+/******************************************/
+//                 PRESETS                //
+/******************************************/
+// Bell Preset
+Pdef.new(
+	\bellPdef,
 	Pbind(
-		\instrument, \drumBuf,
-		\delta, Prand([0.5],inf),
-		\buf, Prand(d[\drums], inf),
-		\rate, 1,
-		\amp, 0.5,
+	    \instrument, \bellSynth,
+		\dur, Pseq([2.2,2.2,2.05,2.2,2.2,2.2,2.05,2.2],inf),//Pseq([1/160], inf),
+		\scale, Scale.minor,
+		\degree, Pseq([3,1,2,3,3,3,2,1],inf),
+		\octave, 6,
+	    //\delta, Pseq([1.20], inf),
 	);
-).play;
-)
-/////
+);
 
+// Rhythm Preset
+
+Pdef.new(
+	\drumPdef,
+	Pbind(
+	    \instrument, \drumBuf,
+	    \dur, Pseq([1/16], inf),
+		\stretch, 60/120 * 4,
+	    \buf, Pseq([kick,hhat,hhat,snare,hhat,kick,ride,ride,ride],inf),
+	    \delta, Pseq([0.20], inf),
+	    \rate, 1,
+	    \amp, 0.35,
+	);
+);
+
+)
+
+/**********************************************************/
+//                     END OF SYNTH DEFINITIONS          //
+/********************************************************/
+
+
+
+
+/**********************************************************/
+//                     OSC DEFINITIONS                   //
+/********************************************************/
+(
+	// Variables
+	var square, sin = nil, flute, guitar, violin, bell, drum, pianoBuf, objects;
+
+	// Stop all
+
+OSCdef.new(
+	\stopAll,
+	{arg msg;
+		[msg].postln;
+
+		Server.freeAll();
+
+		// Stop every object
+
+		objects.do({
+			arg item, i;
+			item.stop;
+			item.free();
+			item = nil;
+		});
+	},
+	'/stopAll',
+	nil, 57120
+);
+
+
+
+	// Sin Preview
+
+	OSCdef.new(
+		\sin,
+		{arg msg;
+			[msg].postln;
+
+			if ( [msg][0][1] == -1.0)
+			{
+				sin.free();
+				sin = nil;
+			}
+			{
+				sin = Synth(\sinSynth, [\freq, [msg][0][2]])
+			}
+		},
+		'/sin',
+		nil, 57120
+	);
+
+
+	// Square Preview
+
+	square = nil;
+
+	OSCdef.new(
+		\square,
+		{arg msg;
+			[msg].postln;
+
+			if ( [msg][0][1] == -1.0)
+			{
+				square.free();
+				square = nil;
+			}
+			{
+				square = Synth(\squareSynth, [\freq, [msg][0][2]])
+			}
+		},
+		'/square',
+		nil, 57120
+	);
+
+
+	// Flute Preview
+
+	flute = nil;
+
+	OSCdef.new(
+		\flute,
+		{arg msg;
+			[msg].postln;
+
+			if ( [msg][0][1] == -1.0)
+			{
+				flute.free();
+				flute = nil;
+			}
+			{
+				flute = Synth(\fluteSynth, [\freq, [msg][0][2]])
+			}
+		},
+		'/flute',
+		nil, 57120
+	);
+
+
+	// Guitar Preview
+
+	guitar = nil;
+
+	OSCdef.new(
+		\guitar,
+		{arg msg;
+			[msg].postln;
+
+			if ( [msg][0][1] == -1.0)
+			{
+				guitar.free();
+				guitar = nil;
+			}
+			{
+				guitar = Synth(\guitarSynth, [\freq, [msg][0][2]])
+			}
+		},
+		'/guitar',
+		nil, 57120
+	);
+
+
+	// Violin Preview
+
+	violin = nil;
+
+	OSCdef.new(
+		\violin,
+		{arg msg;
+			[msg].postln;
+
+			if ( [msg][0][1] == -1.0)
+			{
+				violin.free();
+				violin = nil;
+			}
+			{
+				violin = Synth(\violinSynth, [\freq, [msg][0][2]])
+			}
+		},
+		'/violin',
+		nil, 57120
+	);
+
+
+	// Bell Preview
+
+	bell = nil;
+
+	OSCdef.new(
+		\bell,
+		{arg msg;
+			[msg].postln;
+
+			if ( [msg][0][1] == -1.0)
+			{
+				bell.free();
+				bell = nil;
+			}
+			{
+				bell = Synth(\bellSynth, [\freq, [msg][0][2]])
+			}
+		},
+		'/bell',
+		nil, 57120
+	);
+
+
+	// Drum Preview
+
+	drum = nil;
+	OSCdef.new(
+		\drums,
+		{arg msg;
+			[msg].postln;
+
+			if ( [msg][0][1] == -1.0)
+			{
+				drum.free();
+				drum = nil;
+			}
+			{
+				drum = Synth(\drumBuf, [\buf, d[\drums][[msg][0][2]]])
+			}
+		},
+		'/drums',
+		nil, 57120
+	);
+
+
+	// Piano Buff Preview
+
+	pianoBuf = nil;
+	OSCdef.new(
+		\piano,
+		{arg msg;
+			[msg].postln;
+
+			if ( [msg][0][1] == -1.0)
+			{
+				pianoBuf.free();
+				pianoBuf = nil;
+			}
+			{
+				pianoBuf = Synth(\pianoBuf, [\buf, d[\piano][0],
+					\rate, 1.059463**([msg][0][2])])
+			}
+		},
+		'/piano',
+		nil, 57120
+	);
+
+
+	// **** SOUND OBJECTS **** //
+
+	objects = Array.newClear(indexedSize: 50);
+
+	// Sin
+
+	OSCdef.new(
+		\sinLoop,
+		{arg msg;
+			[msg].postln;
+			if ( [msg][0][1] == -1.0)
+			{
+				objects[[msg][0][2]].free();
+				objects[[msg][0][2]] = nil;
+			}
+			{
+				objects[[msg][0][2]] = Synth(\sinLoopSynth)
+			}
+		},
+		'/sinLoop',
+		nil, 57120
+	);
+
+	// Square
+
+	OSCdef.new(
+		\squareLoop,
+		{arg msg;
+			[msg].postln;
+
+			if ( [msg][0][1] == -1.0)
+			{
+			    objects[[msg][0][2]].stop;
+				objects[[msg][0][2]].free();
+				objects[[msg][0][2]] = nil;
+			}
+			{
+				objects[[msg][0][2]] = Synth(\squareLoopSynth)
+			}
+		},
+		'/squareLoop',
+		nil, 57120
+	);
+
+
+
+	// Move sound to new index
+
+	OSCdef.new(
+		\move,
+		{arg msg;
+			[msg].postln;
+			objects[[msg][0][2]] = objects[[msg][0][1]];
+
+		},
+		'/move',
+		nil, 57120
+	);
+
+
+
+	/******************************************************/
+	// PRESETS OSC
+    /******************************************************/
+
+	// Rhythm 1 preset
+	OSCdef.new(
+		\drumPreset,
+		{arg msg;
+			[msg].postln;
+
+
+			if ( [msg][0][1] == -1.0)
+			{
+			    objects[[msg][0][2]].stop;
+				objects[[msg][0][2]].free();
+				objects[[msg][0][2]] = nil;
+			}
+			{
+				objects[[msg][0][2]] = Pdef(\drumPdef).play;
+			}
+		},
+		'/drumPreset',
+		nil, 57120
+	);
+
+    // BELLS preset
+    OSCdef.new(
+		\bellPreset,
+		{arg msg;
+			[msg].postln;
+
+
+			if ( [msg][0][1] == -1.0)
+			{
+			    objects[[msg][0][2]].stop;
+				objects[[msg][0][2]].free();
+				objects[[msg][0][2]] = nil;
+			}
+			{
+				objects[[msg][0][2]] = Pdef(\bellPdef).play;
+			}
+		},
+		'/bellPreset',
+		nil, 57120
+	);
+)
+/**********************************************************/
+//                     END OF OSC DEFINITIONS            //
+/********************************************************/
+
+ScIDE.handshake; // Ejecutar si da error al guardar
+
+
+
+
+// LOOPS
 
 // Sin LOOP
 (
@@ -409,258 +744,97 @@ SynthDef(\squareLoopSynth,
 }).add;
 )
 
-// OSC DEFINITIONS-----
 
-// Stop all
+
+
+// TEST
+
+play{SinOsc.ar(OnePole.ar(Mix(
+	LFSaw.ar([1,0.99],[0,0.6],2000,2000).trunc([400,600])*[1,-1]
+),0.98)).dup*0.1}
+
+//// PIANO TEST ////
 (
-OSCdef.new(
-	\stopAll,
-	{arg msg;
-		[msg].postln;
-
-		Server.freeAll();
-	},
-	'/stopAll',
-	nil, 57120
-);
+Pdef(
+	\pianoRhythm,
+	Pbind(
+		\instrument, \pianoBuf,
+		\delta, Prand([0.5],inf),
+		\buf, d[\piano][0],
+		\rate, Pseq([1*(1.059463**(-9)),
+			1*(1.059463**(-8)),
+			//1*(1.059463**(-7)),
+			1*(1.059463**(-6)),
+			//1*(1.059463**(-5)),
+			1*(1.059463**(-4)),
+			1*(1.059463**(-3)),
+			//1*(1.059463**(-2)),
+			1*(1.059463**(-1)),
+			//1*(1.059463**(0)),
+			1*(1.059463**(1)),
+			1*(1.059463**(2)),
+			//1*(1.059463**(3))
+		],1),
+		\amp, 0.5,
+	);
+).play;
 )
 
 
-// Sin Preview
+
+
 (
-var sin = nil;
+var crash = d[\drums][0],
+fTom = d[\drums][1],
+hTom = d[\drums][2],
+hhat = d[\drums][3],
+kick = d[\drums][4],
+mTom = d[\drums][5],
+ride = d[\drums][6],
+snare = d[\drums][7];
+Pdef.new(
+	\test,
+	Pbind(
+	    \instrument, \bellSynth,
+		\dur, Pseq([2.2,2.2,2.05,2.2,2.2,2.2,2.05,2.2],inf),//Pseq([1/160], inf),
+		\scale, Scale.minor,
+		\degree, Pseq([3,1,2,3,3,3,2,1],inf),
+		\octave, 6,
+	    //\delta, Pseq([1.20], inf),
+	);
+)
+)
+var test = Pdef(\test).stop;
 
-OSCdef.new(
-	\sin,
-	{arg msg;
-		[msg].postln;
+test.free();
+test = nil;
 
-		if ( [msg][0][1] == -1.0)
-		{
-			sin.free();
-			sin = nil;
-		}
-		{
-			sin = Synth(\sinSynth, [\freq, [msg][0][2]])
-		}
-	},
-	'/sin',
-	nil, 57120
-);
+
+p.stop;
+
+
+// R1
+PDef(
+	\test,
+	Pbind(
+	    \instrument, \drumBuf,
+	    \dur, Pseq([1/16], inf),
+		\stretch, 60/120 * 4,
+	    \buf, Pseq([kick,hhat,hhat,snare,hhat,kick,ride,ride,ride],inf),
+	    \delta, Pseq([0.20], inf),
+	    \rate, 1,
+	    \amp, 0.35,
+).play;
 )
 
-// Square Preview
-(
-var square = nil;
 
-OSCdef.new(
-	\square,
-	{arg msg;
-		[msg].postln;
 
-		if ( [msg][0][1] == -1.0)
-		{
-			square.free();
-			square = nil;
-		}
-		{
-			square = Synth(\squareSynth, [\freq, [msg][0][2]])
-		}
-	},
-	'/square',
-	nil, 57120
-);
-)
 
-// Flute Preview
-(
-var flute = nil;
 
-OSCdef.new(
-	\flute,
-	{arg msg;
-		[msg].postln;
 
-		if ( [msg][0][1] == -1.0)
-		{
-			flute.free();
-			flute = nil;
-		}
-		{
-			flute = Synth(\fluteSynth, [\freq, [msg][0][2]])
-		}
-	},
-	'/flute',
-	nil, 57120
-);
-)
 
-// Guitar Preview
-(
-var guitar = nil;
 
-OSCdef.new(
-	\guitar,
-	{arg msg;
-		[msg].postln;
 
-		if ( [msg][0][1] == -1.0)
-		{
-			guitar.free();
-			guitar = nil;
-		}
-		{
-			guitar = Synth(\guitarSynth, [\freq, [msg][0][2]])
-		}
-	},
-	'/guitar',
-	nil, 57120
-);
-)
 
-// Violin Preview
-(
-var violin = nil;
 
-OSCdef.new(
-	\violin,
-	{arg msg;
-		[msg].postln;
-
-		if ( [msg][0][1] == -1.0)
-		{
-			violin.free();
-			violin = nil;
-		}
-		{
-			violin = Synth(\violinSynth, [\freq, [msg][0][2]])
-		}
-	},
-	'/violin',
-	nil, 57120
-);
-)
-
-// Bell Preview
-(
-var bell = nil;
-
-OSCdef.new(
-	\bell,
-	{arg msg;
-		[msg].postln;
-
-		if ( [msg][0][1] == -1.0)
-		{
-			bell.free();
-			bell = nil;
-		}
-		{
-			bell = Synth(\bellSynth, [\freq, [msg][0][2]])
-		}
-	},
-	'/bell',
-	nil, 57120
-);
-)
-
-// Drum Preview
-(
-var drum = nil;
-OSCdef.new(
-	\drums,
-	{arg msg;
-		[msg].postln;
-
-		if ( [msg][0][1] == -1.0)
-		{
-			drum.free();
-			drum = nil;
-		}
-		{
-			drum = Synth(\drumBuf, [\buf, d[\drums][[msg][0][2]]])
-		}
-	},
-	'/drums',
-	nil, 57120
-);
-)
-
-// Piano Buff Preview
-(
-var pianoBuf = nil;
-OSCdef.new(
-	\piano,
-	{arg msg;
-		[msg].postln;
-
-		if ( [msg][0][1] == -1.0)
-		{
-			pianoBuf.free();
-			pianoBuf = nil;
-		}
-		{
-			pianoBuf = Synth(\pianoBuf, [\buf, d[\piano][0],
-				\rate, 1.059463**([msg][0][2])])
-		}
-	},
-	'/piano',
-	nil, 57120
-);
-)
-
-var objects = Array.newClear(indexedSize: 50);
-
-// Sin
-
-OSCdef.new(
-	\sinLoop,
-	{arg msg;
-		[msg].postln;
-		if ( [msg][0][1] == -1.0)
-		{
-			objects[[msg][0][2]].free();
-			objects[[msg][0][2]] = nil;
-		}
-		{
-			objects[[msg][0][2]] = Synth(\sinLoopSynth)
-		}
-	},
-	'/sinLoop',
-	nil, 57120
-);
-
-// Square
-
-OSCdef.new(
-	\squareLoop,
-	{arg msg;
-		[msg].postln;
-
-		if ( [msg][0][1] == -1.0)
-		{
-			objects[[msg][0][2]].free();
-			objects[[msg][0][2]] = nil;
-		}
-		{
-			objects[[msg][0][2]] = Synth(\squareLoopSynth)
-		}
-	},
-	'/squareLoop',
-	nil, 57120
-);
-
-// Move sound to new index
-
-OSCdef.new(
-	\move,
-	{arg msg;
-		[msg].postln;
-		objects[[msg][0][2]] = objects[[msg][0][1]];
-
-	},
-	'/move',
-	nil, 57120
-);
-
-)
+////////////////////////////

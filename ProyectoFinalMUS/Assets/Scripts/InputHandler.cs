@@ -13,12 +13,13 @@ public class InputHandler : MonoBehaviour
     float angleSector;
     //int currentSelected = 0;
 
-    // FX menu & buttons
-    public GameObject panelFX;
-    public List<GameObject> buttonsFX = new List<GameObject>();
+    // Presets menu & buttons
+    public GameObject panelPresets;
+    public List<GameObject> buttonsPresets = new List<GameObject>();
 
     // Button selection
     GameObject selectedSample;
+    GameObject selectedPreset;
 
     // Intruments prefabs
     public GameObject sinPrefab;
@@ -52,7 +53,7 @@ public class InputHandler : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(null, null);
         panelSamplers.SetActive(false);
         selector.SetActive(false);
-        panelFX.SetActive(false);
+        panelPresets.SetActive(false);
         objectCursor.SetActive(false);
 
         // Calculate radialUI angle
@@ -96,7 +97,7 @@ public class InputHandler : MonoBehaviour
 
         // UPDATE SAMPLERS PANEL-------------
         // Show/hide the samplers panel
-        if ( !pianoPanel.activeSelf && Input.GetAxis("RightTrigger") != 0)
+        if (!pianoPanel.activeSelf && Input.GetAxis("RightTrigger") != 0)
         {
             panelSamplers.SetActive(true);
             if (objectNavigationMode)
@@ -164,16 +165,29 @@ public class InputHandler : MonoBehaviour
         // UPDATE FX PANEL-----------
         // Show/hide the samplers panel
         if (Input.GetAxis("LeftTrigger") != 0)
-            panelFX.SetActive(true);
+            panelPresets.SetActive(true);
         else
         {
             // Call the onClick event if the selected gameObject is not null
-            if (EventSystem.current.currentSelectedGameObject != null && panelFX.activeSelf)
+            if (selectedPreset != null && panelPresets.activeSelf)
+            {
+                EventSystem.current.SetSelectedGameObject(selectedPreset, null);
                 EventSystem.current.currentSelectedGameObject.GetComponent<Button>().onClick.Invoke();
+            }
 
-            panelFX.SetActive(false);
+
+            panelPresets.SetActive(false);
         }
-
+        /*
+        if (selectedPreset != null)
+        {
+            print(selectedPreset.name);
+        }
+        else
+        {
+            print("NUULL");
+        }
+        */
         // Select button with left joystick
         float FXposX = Input.GetAxis("LeftHorizontal");
         float FXposY = Input.GetAxis("LeftVertical");
@@ -181,11 +195,11 @@ public class InputHandler : MonoBehaviour
         //print(angle);
 
         if (FXangle == 0)
-            EventSystem.current.SetSelectedGameObject(null, null);
+        { selectedPreset = null; EventSystem.current.SetSelectedGameObject(null, null); }
         else if (FXangle < 0)
-            EventSystem.current.SetSelectedGameObject(buttonsFX[0], null);
+        { selectedPreset = buttonsPresets[0]; EventSystem.current.SetSelectedGameObject(buttonsPresets[0], null); }
         else
-            EventSystem.current.SetSelectedGameObject(buttonsFX[1], null);
+        { selectedPreset = buttonsPresets[1]; EventSystem.current.SetSelectedGameObject(buttonsPresets[1], null); }
     }
 
     void updateCursorNavigationMode()
@@ -294,7 +308,7 @@ public class InputHandler : MonoBehaviour
         print("New synth added");
 
         // Instantiate instrument in the scenario and add it to SuperCollider
-        GameObject soundObj = null;
+        GameObject soundObj = sinPrefab;
         switch (name)
         {
             case "/sin":
