@@ -12,17 +12,17 @@ public class SoundObjectManager : MonoBehaviour
     GameObject[,] soundObjects;
     string[,] objectTypes;
 
-    int soundCounter = 0; 
-    
+    int soundCounter = 0;
+
+    public AudioClip acceptClip;
+    public AudioClip removeClip;
+    AudioSource audioUI;
+
     void Start()
     {
         soundObjects = new GameObject[height, width];
         objectTypes = new string[height, width];
-    }
-    
-    void Update()
-    {
-        
+        audioUI = GetComponent<AudioSource>();
     }
 
     public void addSoundObject(string name, GameObject soundObj)
@@ -39,6 +39,8 @@ public class SoundObjectManager : MonoBehaviour
             objectTypes[y, x] = name;
 
             soundCounter++;
+
+            audioUI.PlayOneShot(acceptClip);
         }
         else
             print("Error: Place in object array already occupied by an object\n");
@@ -55,6 +57,50 @@ public class SoundObjectManager : MonoBehaviour
             objectTypes[y, x] = null;
             rearrangeObjects(x, y);
             soundCounter--;
+
+            audioUI.PlayOneShot(removeClip);
+        }
+        else
+            print("Error: No object at given location\n");
+    }
+
+    public void muteSoundObject(int x, int y)
+    {
+        if (soundObjects[y, x] != null)
+        {
+            //OSCHandler.Instance.SendMessageToClient("SuperCollider", objectTypes[y, x], -1.0, x + y * width, -1);
+
+
+            soundObjects[y, x].GetComponent<Sound>().mute();
+
+            /*Destroy(soundObjects[y, x]);
+            soundObjects[y, x] = null;
+            objectTypes[y, x] = null;
+            rearrangeObjects(x, y);
+            soundCounter--;*/
+
+            audioUI.PlayOneShot(removeClip);
+        }
+        else
+            print("Error: No object at given location\n");
+    }
+
+    public void desmuteSoundObject(int x, int y)
+    {
+        if (soundObjects[y, x] != null)
+        {
+            //OSCHandler.Instance.SendMessageToClient("SuperCollider", objectTypes[y, x], -1.0, x + y * width, -1);
+
+
+            soundObjects[y, x].GetComponent<Sound>().desmute();
+
+            /*Destroy(soundObjects[y, x]);
+            soundObjects[y, x] = null;
+            objectTypes[y, x] = null;
+            rearrangeObjects(x, y);
+            soundCounter--;*/
+
+            audioUI.PlayOneShot(removeClip);
         }
         else
             print("Error: No object at given location\n");
