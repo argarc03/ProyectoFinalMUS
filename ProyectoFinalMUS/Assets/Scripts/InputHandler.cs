@@ -44,7 +44,6 @@ public class InputHandler : MonoBehaviour
     GameObject selectedSoundObject = null;
 
     // Piano
-
     public GameObject pianoPanel;
     public GameObject drumsPanel;
 
@@ -213,64 +212,12 @@ public class InputHandler : MonoBehaviour
                 }
             }
         }
-
-        //selector.transform.rotation = Quaternion.Euler(0, 0, -45f + 9);
-
-        /*if (angle < 0)
-        {
-            EventSystem.current.SetSelectedGameObject(buttonsSampler[0], null);
-            selectedSample = buttonsSampler[0];
-            selector.SetActive(true);
-        }
-        else
-        {
-            EventSystem.current.SetSelectedGameObject(buttonsSampler[1], null);
-            selectedSample = buttonsSampler[1];
-        }*/
-
-        // UPDATE FX PANEL-----------
-        // Show/hide the samplers panel
-        /*if (Input.GetAxis("LeftTrigger") != 0)
-            panelPresets.SetActive(true);
-        else
-        {
-            // Call the onClick event if the selected gameObject is not null
-            if (selectedPreset != null && panelPresets.activeSelf)
-            {
-                EventSystem.current.SetSelectedGameObject(selectedPreset, null);
-                EventSystem.current.currentSelectedGameObject.GetComponent<Button>().onClick.Invoke();
-            }
-
-
-            panelPresets.SetActive(false);
-        }
-        /*
-        if (selectedPreset != null)
-        {
-            print(selectedPreset.name);
-        }
-        else
-        {
-            print("NUULL");
-        }
-        
-        // Select button with left joystick
-        float FXposX = Input.GetAxis("LeftHorizontal");
-        float FXposY = Input.GetAxis("LeftVertical");
-        float FXangle = Mathf.Atan2(FXposX, FXposY) * Mathf.Rad2Deg;
-        //print(angle);
-
-        if (FXangle == 0)
-        { selectedPreset = null; EventSystem.current.SetSelectedGameObject(null, null); }
-        else if (FXangle < 0)
-        { selectedPreset = buttonsPresets[0]; EventSystem.current.SetSelectedGameObject(buttonsPresets[0], null); }
-        else
-        { selectedPreset = buttonsPresets[1]; EventSystem.current.SetSelectedGameObject(buttonsPresets[1], null); }*/
     }
 
     void updateCursorNavigationMode()
     {
         GameObject[,] soundObjects = soundObjManager.getSoundObjects();
+
         // Select an object
         if (selectedSoundObject == null && Input.GetButtonDown("Button A"))
         {
@@ -288,8 +235,16 @@ public class InputHandler : MonoBehaviour
                     soundObjManager.muteSoundObject(cursorX, cursorY);
             }
         }
+        else if (selectedSoundObject == null && Input.GetButtonDown("Button Y"))
+        {
+            if (soundObjects[cursorY, cursorX] != null)
+            {
+                soundObjManager.soloSoundObject(cursorX, cursorY);
+            }
+        }
 
         if (selectedSoundObject != null) return;
+
         // Navigate between objects
         int dirX = 0;
         int dirY = 0;
@@ -311,6 +266,7 @@ public class InputHandler : MonoBehaviour
         int newCursorX = cursorX, newCursorY = cursorY;
         GameObject selectedGO = null;
         bool cursorUpdated = false;
+
         // Horizontal movement of the cursor
         if (dirX != 0)
         {
@@ -344,7 +300,8 @@ public class InputHandler : MonoBehaviour
             cursorX = newCursorX; cursorY = newCursorY;
             objectCursor.transform.position = new Vector3(cursorX + 1, cursorHeight, -cursorY);
 
-            audioUI.PlayOneShot(changeSoundClip);
+            if (!panelPresets.activeSelf && !panelSamplers.activeSelf && !pianoPanel.activeSelf)
+                audioUI.PlayOneShot(changeSoundClip);
         }
     }
 

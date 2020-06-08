@@ -50,8 +50,8 @@ public class SoundObjectManager : MonoBehaviour
     {
         if (soundObjects[y, x] != null)
         {
-            OSCHandler.Instance.SendMessageToClient("SuperCollider", objectTypes[y, x], -1.0, x + y*width, -1);
-            
+            OSCHandler.Instance.SendMessageToClient("SuperCollider", objectTypes[y, x], -1.0, x + y * width, -1);
+
             Destroy(soundObjects[y, x]);
             soundObjects[y, x] = null;
             objectTypes[y, x] = null;
@@ -106,6 +106,26 @@ public class SoundObjectManager : MonoBehaviour
             print("Error: No object at given location\n");
     }
 
+    public void soloSoundObject(int x, int y)
+    {
+        GameObject soloObject = soundObjects[y, x];
+        Sound soloSound = soloObject.GetComponent<Sound>();
+        if (soloSound.isMuted())
+            soloSound.desmute();
+
+        foreach (GameObject go in soundObjects)
+        {
+            if (go != soloObject)
+            {
+                if (go != null)
+                {
+                    Sound sound = go.GetComponent<Sound>();
+                    if (sound != null) sound.mute();
+                }
+            }
+        }
+    }
+
     public GameObject[,] getSoundObjects()
     {
         return soundObjects;
@@ -119,7 +139,7 @@ public class SoundObjectManager : MonoBehaviour
     void rearrangeObjects(int x, int y)
     {
         bool reachedEnd = false;
-        while(!reachedEnd)
+        while (!reachedEnd)
         {
             int newX = x + 1, newY = y;
             if (newX >= width)
