@@ -28,7 +28,6 @@ public class RecordingController : MonoBehaviour
     public GameObject soundObj;
     public SoundObjectManager soundObjManager;
 
-
     public List<float> values;
 
     // Data of each instrument:
@@ -41,9 +40,14 @@ public class RecordingController : MonoBehaviour
     public Image icon;
     public Text text;
 
+    public AudioClip cancelClip;
+    public AudioClip undoClip;
+    public AudioClip cleanClip;
+    AudioSource audioUI;
+
     void Start()
     {
-
+        audioUI = GetComponent<AudioSource>();
     }
 
     void FixedUpdate()
@@ -132,6 +136,8 @@ public class RecordingController : MonoBehaviour
                     Destroy(go);
                 itemsGOSets.RemoveAt(itemsGOSets.Count - 1);
             }
+
+            audioUI.PlayOneShot(undoClip, 0.8f);
         }
     }
 
@@ -146,6 +152,8 @@ public class RecordingController : MonoBehaviour
             foreach (GameObject go in itemsGO)
                 Destroy(go);
             itemsGO.Clear();
+
+            audioUI.PlayOneShot(cleanClip, 0.7f);
         }
     }
 
@@ -166,7 +174,7 @@ public class RecordingController : MonoBehaviour
 
     void createItem()
     {
-        if (instantiateItem && (timeControl.time % 0.1f) < 0.05f)
+        if (instantiateItem && (timeControl.time % 0.05f) < 0.05f)
         {
             Vector3 itemPos = timeBar.transform.position;
             itemPos.y = itemY * 20 + 36;
@@ -181,6 +189,7 @@ public class RecordingController : MonoBehaviour
         if (timeControl.time <= 0.01f)
         {
             i = 0;
+
         }
         timeBar.transform.localPosition = new Vector3((timeControl.time - 1) * 75, 0f, 0f);
     }

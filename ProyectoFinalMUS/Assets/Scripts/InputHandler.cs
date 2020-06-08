@@ -47,9 +47,15 @@ public class InputHandler : MonoBehaviour
     public GameObject pianoPanel;
     public GameObject drumsPanel;
 
-    // Use this for initialization
+    public AudioClip openWheelClip;
+    public AudioClip changeInstrumentClip;
+    public AudioClip openRecorderClip;
+    public AudioClip changeSoundClip;
+    AudioSource audioUI;
+
     void Start()
     {
+        audioUI = GetComponent<AudioSource>();
         EventSystem.current.SetSelectedGameObject(null, null);
         panelSamplers.SetActive(false);
         selector.SetActive(false);
@@ -64,19 +70,13 @@ public class InputHandler : MonoBehaviour
     {
         // UPDATE PIANO PANEL
         if (pianoPanel.activeSelf && Input.GetAxis("LeftBumper") != 0)
-        {
             closePiano();
-        }
 
         if (pianoPanel.activeSelf && Input.GetButtonDown("Options"))
-        {
             pianoPanel.GetComponent<RecordingController>().cleanAll();
-        }
 
         if (pianoPanel.activeSelf && Input.GetButtonDown("Share"))
-        {
             pianoPanel.GetComponent<RecordingController>().undo();
-        }
 
         if (pianoPanel.activeSelf && Input.GetAxis("RightBumper") != 0)
         {
@@ -84,19 +84,23 @@ public class InputHandler : MonoBehaviour
             closePiano();
         }
 
-
         if (!objectNavigationMode && (Input.GetAxis("LeftHorizontal") != 0 || Input.GetAxis("LeftVertical") != 0) && soundObjManager.getNumOfSounds() > 0)
             setCursorNavigationMode(true);
         else if (objectNavigationMode && (Input.GetButtonDown("Button B") || soundObjManager.getNumOfSounds() == 0))
             setCursorNavigationMode(false);
 
         if (objectNavigationMode)
-        {
             updateCursorNavigationMode();
-        }
 
         // UPDATE SAMPLERS PANEL-------------
         // Show/hide the samplers panel
+
+        if( !panelSamplers.activeSelf && Input.GetAxis("RightTrigger") != 0)
+        {
+            if (!audioUI.isPlaying)
+                audioUI.PlayOneShot(openWheelClip);
+        }
+
         if (!pianoPanel.activeSelf && Input.GetAxis("RightTrigger") != 0)
         {
             panelSamplers.SetActive(true);
@@ -117,35 +121,38 @@ public class InputHandler : MonoBehaviour
         }
 
         // Select button with right joystick
-        float posX = Input.GetAxis("RightHorizontal");
-        float posY = Input.GetAxis("RightVertical");
-        float angle = Mathf.Atan2(posX, posY) * Mathf.Rad2Deg;
-        //print(angle);
-
-        if (angle == 0 || -angle > buttonsSampler.Count * angleSector)
+        if (panelSamplers.activeSelf)
         {
-            EventSystem.current.SetSelectedGameObject(null, null);
-            selectedSample = null;
-            selector.SetActive(false);
-        }
-        else
-        {
-            int j = buttonsSampler.Count;
-            while (j >= 0 && -angle <= angleSector * j)
-            {
-                j--;
-            }
-            //print(j);
-            //print(angleSector*j);
-            //print(-angle);
-            if (j >= 0 && j < buttonsSampler.Count)
-            {
-                EventSystem.current.SetSelectedGameObject(buttonsSampler[j], null);
-                selectedSample = buttonsSampler[j];
-                selector.SetActive(true);
-                selector.transform.rotation = Quaternion.Euler(0, 0, angleSector * j - 45f + 9 + 5);
-            }
 
+            float posX = Input.GetAxis("RightHorizontal");
+            float posY = Input.GetAxis("RightVertical");
+            float angle = Mathf.Atan2(posX, posY) * Mathf.Rad2Deg;
+
+            if (angle == 0 || -angle > buttonsSampler.Count * angleSector)
+            {
+                EventSystem.current.SetSelectedGameObject(null, null);
+                selectedSample = null;
+                selector.SetActive(false);
+            }
+            else
+            {
+                int j = buttonsSampler.Count;
+                while (j >= 0 && -angle <= angleSector * j)
+                    j--;
+
+                if (j >= 0 && j < buttonsSampler.Count)
+                {
+                    EventSystem.current.SetSelectedGameObject(buttonsSampler[j], null);
+                    selectedSample = buttonsSampler[j];
+                    selector.SetActive(true);
+                    Quaternion newRot = Quaternion.Euler(0, 0, angleSector * j - 45f + 9 + 5);
+
+                    if (selector.transform.rotation != newRot)
+                        audioUI.PlayOneShot(changeInstrumentClip, 0.5f);
+
+                    selector.transform.rotation = newRot;
+                }
+            }
         }
 
         //selector.transform.rotation = Quaternion.Euler(0, 0, -45f + 9);
@@ -267,6 +274,8 @@ public class InputHandler : MonoBehaviour
         {
             cursorX = newCursorX; cursorY = newCursorY;
             objectCursor.transform.position = new Vector3(cursorX + 1, cursorHeight, -cursorY);
+
+            audioUI.PlayOneShot(changeSoundClip);
         }
     }
 
@@ -291,7 +300,9 @@ public class InputHandler : MonoBehaviour
     void closePiano()
     {
         pianoPanel.SetActive(false);
-        pianoPanel.GetComponent<RecordingController>().deactivatePiano(); //pianoActive = false;
+        pianoPanel.GetComponent<RecordingController>().deactivatePiano();
+
+        //audioUI.PlayOneShot();
     }
 
     public void openPiano(string name)
@@ -300,6 +311,8 @@ public class InputHandler : MonoBehaviour
         pianoPanel.GetComponent<RecordingController>().init(name);
 
         pianoPanel.GetComponent<RecordingController>().icon.sprite = selectedSample.GetComponent<Button>().image.sprite;
+
+        audioUI.PlayOneShot(openRecorderClip, 0.6f);
     }
 
     // Add a synth to the scene
