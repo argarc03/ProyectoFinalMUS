@@ -67,6 +67,8 @@ public class Sound : MonoBehaviour
 
         if (isPreset)
             OSCHandler.Instance.SendSoundVolumeMessage("SuperCollider", index, 0.0f);
+        else
+            OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, -1, items[i].y);
     }
 
     public void desmute(int index)

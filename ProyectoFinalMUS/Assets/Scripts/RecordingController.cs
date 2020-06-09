@@ -17,7 +17,7 @@ public class RecordingController : MonoBehaviour
 
     List<GameObject> itemsGO = new List<GameObject>();
 
-    List<Vector3> items = new List<Vector3>(); // time pos, freq, start/stop
+    public List<Vector3> items = new List<Vector3>(); // time pos, freq, start/stop
     Vector3 item;
     int i = 0;
 
@@ -25,7 +25,7 @@ public class RecordingController : MonoBehaviour
 
     public TimeController timeControl;
 
-    public GameObject soundObj;
+    GameObject soundObj;
     public SoundObjectManager soundObjManager;
 
     public List<float> values;
@@ -61,7 +61,7 @@ public class RecordingController : MonoBehaviour
         }
     }
 
-    public void init(string insName)
+    public void init(string insName, List<GameObject> instrumentPrefabs)
     {
         pianoActive = true;
         InstrumentData data = null;
@@ -70,38 +70,46 @@ public class RecordingController : MonoBehaviour
             case "/sin":
                 data = sinData;
                 text.text = "WAVE";
+                soundObj = instrumentPrefabs[6];
                 break;
             case "/square":
                 data = squareData;
                 text.text = "WAVE";
+                soundObj = instrumentPrefabs[6];
                 break;
             case "/drums":
                 data = percussionData;
                 text.text = "DRUMKIT";
+                soundObj = instrumentPrefabs[2];
                 break;
             case "/piano":
                 data = pianoData;
                 text.text = "PIANO";
+                soundObj = instrumentPrefabs[1];
                 break;
             case "/flute":
                 data = sinData;
                 data.instrumentName = "/flute";
                 text.text = "FLUTE";
+                soundObj = instrumentPrefabs[5];
                 break;
             case "/guitar":
                 data = sinData;
                 data.instrumentName = "/guitar";
                 text.text = "GUITAR";
+                soundObj = instrumentPrefabs[4];
                 break;
             case "/violin":
                 data = sinData;
                 data.instrumentName = "/violin";
                 text.text = "VIOLIN";
+                soundObj = instrumentPrefabs[3];
                 break;
             case "/bell":
                 data = sinData;
                 data.instrumentName = "/bell";
                 text.text = "BELLS";
+                soundObj = instrumentPrefabs[0];
                 break;
             default:
                 break;
@@ -112,9 +120,14 @@ public class RecordingController : MonoBehaviour
 
     public void acceptCreation()
     {
-        soundObj.GetComponent<Sound>().items = items;
-        soundObj.GetComponent<Sound>().name = name;
-        soundObj.GetComponent<Sound>().timeControl = timeControl;
+        Sound sound = soundObj.GetComponent<Sound>();
+        sound.items = items;
+        sound.name = name;
+        sound.timeControl = timeControl;
+        sound.isPreset = false;
+
+        OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, -1, items[i].y);
+
         soundObjManager.addSoundObject(name, soundObj);
     }
 
@@ -188,10 +201,8 @@ public class RecordingController : MonoBehaviour
     void updateTime()
     {
         if (timeControl.time <= 0.01f)
-        {
             i = 0;
 
-        }
         timeBar.transform.localPosition = new Vector3((timeControl.time - 1) * 75, 0f, 0f);
     }
 
