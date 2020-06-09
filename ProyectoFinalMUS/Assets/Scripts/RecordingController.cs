@@ -126,7 +126,7 @@ public class RecordingController : MonoBehaviour
         sound.timeControl = timeControl;
         sound.isPreset = false;
 
-        OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, -1, items[i].y);
+        //OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, -1, items[i].y);
 
         soundObjManager.addSoundObject(name, soundObj);
     }
@@ -191,7 +191,7 @@ public class RecordingController : MonoBehaviour
         if (instantiateItem && (timeControl.time % 0.05f) < 0.05f)
         {
             Vector3 itemPos = timeBar.transform.position;
-            itemPos.y = itemY * 20 + 36;
+            itemPos.y = itemY * 20 + 150;
             GameObject go = Instantiate(pianoItem, itemPos, Quaternion.identity, transform.parent);
             itemsGO.Add(go);
             itemsGOSets[itemsGOSets.Count - 1].Add(go);
