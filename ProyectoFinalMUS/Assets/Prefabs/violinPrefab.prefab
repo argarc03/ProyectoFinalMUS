@@ -833,6 +833,7 @@ MonoBehaviour:
   items: []
   timeControl: {fileID: 0}
   name: 
+  muteMaterial: {fileID: 2100000, guid: 44ef99a19cc155444821aedeb4ce1b7a, type: 2}
   person: {fileID: 4040647129287803834}
   isPreset: 0
 --- !u!1 &8824206457883635330

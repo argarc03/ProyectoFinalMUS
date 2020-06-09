@@ -10,10 +10,11 @@ public class Sound : MonoBehaviour
     public string name = "";
     int i = 0;
 
-    //MeshRenderer meshRenderer;
+    MeshRenderer meshRenderer;
 
-    //Material originalMaterial;
-    //public Material muteMaterial;
+    Material[] originalMaterials = new Material[4];
+    public Material muteMaterial;
+    Material[] muteMaterials = new Material[4];
 
     public GameObject person;
 
@@ -22,8 +23,19 @@ public class Sound : MonoBehaviour
 
     void Start()
     {
-        //meshRenderer = GetComponent<MeshRenderer>();
-        //originalMaterial = meshRenderer.material;
+        meshRenderer = person.GetComponent<MeshRenderer>();
+        List<Material> aux = new List<Material>();
+        meshRenderer.GetMaterials(aux);
+
+        for (int i = 0; i < aux.Count; i++)
+        {
+            originalMaterials[i] = aux[i];
+        }
+
+        for (int j = 0; j < originalMaterials.Length; j++)
+        {
+            muteMaterials[j] = muteMaterial;
+        }
     }
 
     void Update()
@@ -49,8 +61,8 @@ public class Sound : MonoBehaviour
 
     public void mute(int index)
     {
-        //meshRenderer.material = muteMaterial;
-        person.SetActive(false);
+        meshRenderer.materials = muteMaterials;
+        //person.SetActive(false);
         muted = true;
 
         if (isPreset)
@@ -59,8 +71,10 @@ public class Sound : MonoBehaviour
 
     public void desmute(int index)
     {
-        //meshRenderer.material = originalMaterial;
-        person.SetActive(true);
+
+        meshRenderer.materials = originalMaterials;
+
+        //person.SetActive(true);
         muted = false;
 
         if (isPreset)
