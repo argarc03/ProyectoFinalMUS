@@ -22,9 +22,8 @@ public class InputHandler : MonoBehaviour
     GameObject selectedSample;
     GameObject selectedPreset;
 
-    // Intruments prefabs
-    public GameObject sinPrefab;
-    public GameObject squarePrefab;
+    // Instruments prefabs
+    public List<GameObject> instrumentPrefabs = new List<GameObject>();
 
     // Sound Objects Manager
     public SoundObjectManager soundObjManager;
@@ -93,9 +92,15 @@ public class InputHandler : MonoBehaviour
         if (objectNavigationMode)
             updateCursorNavigationMode();
 
+        if (pianoPanel.activeSelf)
+        {
+            if (objectNavigationMode)
+                setCursorNavigationMode(false);
+        }
+
         // UPDATE SAMPLERS PANEL-------------
         // Show/hide the samplers panel
-        if (!panelSamplers.activeSelf && Input.GetAxis("RightTrigger") != 0)
+        if (!pianoPanel.activeSelf && !panelSamplers.activeSelf && Input.GetAxis("RightTrigger") != 0)
         {
             if (!audioUI.isPlaying)
                 audioUI.PlayOneShot(openWheelClip);
@@ -155,7 +160,7 @@ public class InputHandler : MonoBehaviour
 
         // UPDATE PRESETS PANEL-------------
         // Show/hide the samplers panel
-        if (!panelPresets.activeSelf && Input.GetAxis("LeftTrigger") != 0)
+        if (!pianoPanel.activeSelf && !panelPresets.activeSelf && Input.GetAxis("LeftTrigger") != 0)
         {
             if (!audioUI.isPlaying)
                 audioUI.PlayOneShot(openWheelClip);
@@ -344,21 +349,32 @@ public class InputHandler : MonoBehaviour
     // Add a synth to the scene
     public void AddSynth(string name)
     {
-        print("New synth added");
-
         // Instantiate instrument in the scenario and add it to SuperCollider
-        GameObject soundObj = sinPrefab;
+        GameObject soundObj = instrumentPrefabs[0];
         switch (name)
         {
-            case "/sin":
-                soundObj = sinPrefab;
+            case "/bellPreset":
+                soundObj = instrumentPrefabs[0];
                 break;
-            case "/square":
-                soundObj = squarePrefab;
+            case "/pianoPreset":
+                soundObj = instrumentPrefabs[1];
+                break;
+            case "/drumPreset2":
+                soundObj = instrumentPrefabs[2];
+                break;
+            case "/violinPreset":
+                soundObj = instrumentPrefabs[3];
+                break;
+            case "/guitarPreset":
+                soundObj = instrumentPrefabs[4];
+                break;
+            case "/flutePreset":
+                soundObj = instrumentPrefabs[5];
                 break;
             default:
                 break;
         }
+        soundObj.GetComponent<Sound>().isPreset = true;
         soundObjManager.addSoundObject(name, soundObj);
     }
 }

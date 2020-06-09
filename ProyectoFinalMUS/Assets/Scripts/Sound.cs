@@ -10,26 +10,32 @@ public class Sound : MonoBehaviour
     public string name = "";
     int i = 0;
 
-    MeshRenderer meshRenderer;
+    //MeshRenderer meshRenderer;
 
-    Material originalMaterial;
-    public Material muteMaterial;
+    //Material originalMaterial;
+    //public Material muteMaterial;
+
+    public GameObject person;
 
     bool muted = false;
+    public bool isPreset = false;
 
     void Start()
     {
-        meshRenderer = GetComponent<MeshRenderer>();
-        originalMaterial = meshRenderer.material;
+        //meshRenderer = GetComponent<MeshRenderer>();
+        //originalMaterial = meshRenderer.material;
     }
 
     void Update()
     {
-        if(!muted)
-            playItems();
+        if (!isPreset)
+        {
+            if (!muted)
+                playItems();
 
-        if (timeControl.time <= 0.01f)
-            i = 0;
+            if (timeControl.time <= 0.01f)
+                i = 0;
+        }
     }
 
     void playItems()
@@ -41,16 +47,24 @@ public class Sound : MonoBehaviour
         }
     }
 
-    public void mute()
+    public void mute(int index)
     {
-        meshRenderer.material = muteMaterial;
+        //meshRenderer.material = muteMaterial;
+        person.SetActive(false);
         muted = true;
+
+        if (isPreset)
+            OSCHandler.Instance.SendSoundVolumeMessage("SuperCollider", index, 0.0f);
     }
 
-    public void desmute()
+    public void desmute(int index)
     {
-        meshRenderer.material = originalMaterial;
+        //meshRenderer.material = originalMaterial;
+        person.SetActive(true);
         muted = false;
+
+        if (isPreset)
+            OSCHandler.Instance.SendSoundVolumeMessage("SuperCollider", index, 1.0f);
     }
 
     public bool isMuted()

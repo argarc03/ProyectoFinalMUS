@@ -11,7 +11,7 @@ public class SoundObjectManager : MonoBehaviour
     // Sound Objects
     GameObject[,] soundObjects;
     string[,] objectTypes;
-    bool[,] muted;
+    //bool[,] muted;
 
     int soundCounter = 0;
 
@@ -23,7 +23,7 @@ public class SoundObjectManager : MonoBehaviour
     {
         soundObjects = new GameObject[height, width];
         objectTypes = new string[height, width];
-        muted = new bool[height, width];
+        //muted = new bool[height, width];
         audioUI = GetComponent<AudioSource>();
     }
 
@@ -68,7 +68,7 @@ public class SoundObjectManager : MonoBehaviour
 
     public bool isMuted(int x, int y)
     {
-        return muted[y,x];
+        return soundObjects[y, x].GetComponent<Sound>().isMuted();
     }
 
     public void muteSoundObject(int x, int y)
@@ -84,11 +84,10 @@ public class SoundObjectManager : MonoBehaviour
             soundCounter--;*/
 
             Sound soundComp = soundObjects[y, x].GetComponent<Sound>();
-            if(soundComp != null)
-                soundComp.mute();
-            else
-                OSCHandler.Instance.SendSoundVolumeMessage("SuperCollider", x + (y * width), 0.0f);
-            muted[y, x] = true;
+            if (soundComp != null)
+                soundComp.mute(x + (y * width));
+
+            //muted[y, x] = true;
             audioUI.PlayOneShot(removeClip);
         }
         else
@@ -99,20 +98,10 @@ public class SoundObjectManager : MonoBehaviour
     {
         if (soundObjects[y, x] != null)
         {
-            //OSCHandler.Instance.SendMessageToClient("SuperCollider", objectTypes[y, x], -1.0, x + y * width, -1);
-
-            /*Destroy(soundObjects[y, x]);
-            soundObjects[y, x] = null;
-            objectTypes[y, x] = null;
-            rearrangeObjects(x, y);
-            soundCounter--;*/
-
             Sound soundComp = soundObjects[y, x].GetComponent<Sound>();
-            if (soundComp != null)
-                soundComp.desmute();
-            else
-                OSCHandler.Instance.SendSoundVolumeMessage("SuperCollider", x + (y * width), 1.0f);
-            muted[y, x] = false;
+            if (soundComp != null && soundComp.isMuted())
+                soundComp.desmute(x + (y * width));
+
             audioUI.PlayOneShot(removeClip);
         }
         else
@@ -124,16 +113,19 @@ public class SoundObjectManager : MonoBehaviour
         GameObject soloObject = soundObjects[y, x];
         Sound soloSound = soloObject.GetComponent<Sound>();
         if (soloSound.isMuted())
-            soloSound.desmute();
+            soloSound.desmute(x + (y * width));
 
-        foreach (GameObject go in soundObjects)
+        for (int i = 0; i < soundObjects.GetLength(1); i++)
         {
-            if (go != soloObject)
+            for (int j = 0; j < soundObjects.GetLength(0); j++)
             {
-                if (go != null)
+                if (soundObjects[j, i] != null)
                 {
-                    Sound sound = go.GetComponent<Sound>();
-                    if (sound != null) sound.mute();
+                    if (soundObjects[j, i] != soloObject)//j != y && i != x)
+                    {
+                        Sound sound = soundObjects[j, i].GetComponent<Sound>();
+                        if (sound != null) sound.mute(i + (j * width));
+                    }
                 }
             }
         }

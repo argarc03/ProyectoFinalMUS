@@ -1,0 +1,260 @@
+fileFormatVersion: 2
+guid: 82c51dd1cd6f591498bacce7d18b556c
+ModelImporter:
+  serializedVersion: 26
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 01 - Default
+    second: {fileID: 2100000, guid: 212465b9dbbca1343aaf4762d97a4b0c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 02 - Default
+    second: {fileID: 2100000, guid: 987d56a586c3bef4aba7433018f05e7b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 07 - Default
+    second: {fileID: 2100000, guid: 914de8f33d5f60d4c862fca8fc66cfac, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 08 - Default
+    second: {fileID: 2100000, guid: ba032c6645ea2b045a72b1a669e5a734, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 09 - Default
+    second: {fileID: 2100000, guid: bc45cdf56db965944ba74b8efa6e9f37, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Attache Gris Pl Mate
+    second: {fileID: 2100000, guid: 31da81a4913b87d49ac7ee46fe7b7c7e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: CB Bois Claire Mate
+    second: {fileID: 2100000, guid: c1e3693184060594091dcae16c95995b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: CB Bois Mate
+    second: {fileID: 2100000, guid: d47bc0db7dedbcd49a5a6df8102306c1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: CB Metal Mate
+    second: {fileID: 2100000, guid: e1100c7ddbd6cf5459ca5c6ab00a7f03, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: CB Noir Mate
+    second: {fileID: 2100000, guid: 1e3d77881f5efb148a79faa9b9d627cb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Cuire Noire Mate
+    second: {fileID: 2100000, guid: c938c746c1fb3164680aea0fd5849858, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: "Cybale Dor\xE9e M\xE9tal Mate"
+    second: {fileID: 2100000, guid: a6f92b42f0299f84bba9c5bd51304a81, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Flute Mate
+    second: {fileID: 2100000, guid: 65cb5043a2547444db7d8c2ac9ee039b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Flute Ob
+    second: {fileID: 2100000, guid: 7c960143ab8bf0343af707916d542321, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Guitare Bois Clair Mate
+    second: {fileID: 2100000, guid: a03d1b528cabcc945a00e6aad0991a70, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: "Guitare Bois Fonc\xE9 Mate"
+    second: {fileID: 2100000, guid: bdfdcf80e80b6d44997df518176601b5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Guitare Gris Mate
+    second: {fileID: 2100000, guid: 4c6305b09364a674eab39de982aa366f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Guitare Orne
+    second: {fileID: 2100000, guid: f5afcfa5171dd3540bdff3e8d6700377, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Guitare Visse Metal
+    second: {fileID: 2100000, guid: d352a81d0b7e1a749a9bb4a73854e3e6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: OB
+    second: {fileID: 2100000, guid: a1bdc82c27947174d833e61259b5f118, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Peinture Bois Mate
+    second: {fileID: 2100000, guid: caf0f8428adba2842af3f4552edf91b1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: "Piano Cl\xE9 Blanc Mate"
+    second: {fileID: 2100000, guid: 24a839b0f4526074fa4eea6d46009c9a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: "Piano Cl\xE9 Noir Mate"
+    second: {fileID: 2100000, guid: cd6b2be4837d966488bff46f428e6970, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Piano Gris Claire Mate
+    second: {fileID: 2100000, guid: 679724022191bd342b461b082dca91c7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Piano Gris Mate
+    second: {fileID: 2100000, guid: 0c201633b8360c442a4d6a77d3343f07, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Piano Pupitre Gris
+    second: {fileID: 2100000, guid: 7e9fc795dc984ab4186582f7723b6c67, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: "Pied M\xE9tal Gris Mate"
+    second: {fileID: 2100000, guid: 895f286155ce1164295ced27022936f6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Platine Bleu Mate
+    second: {fileID: 2100000, guid: 6ed1d71d3dbcf2d49b7f8cdadc38cee2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Platine Gris Arg Mate
+    second: {fileID: 2100000, guid: b1178834a12ce5d499b3c7c1f2348f50, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Platine Gris Bt Mate
+    second: {fileID: 2100000, guid: d46c0a79a2e38554e9149c7036052817, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Platine Gris Tb Mate
+    second: {fileID: 2100000, guid: adc57070ba7400842bdc82d0b4abce3e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Tb Peau Mate
+    second: {fileID: 2100000, guid: 0754956954f59d647913be67494f900d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: m_face
+    second: {fileID: 2100000, guid: 567e0d68c4ab21d418fc116a15b68bb7, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 0.2
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 0.002
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
