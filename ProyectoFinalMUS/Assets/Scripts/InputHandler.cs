@@ -52,8 +52,14 @@ public class InputHandler : MonoBehaviour
     public AudioClip changeSoundClip;
     AudioSource audioUI;
 
+    // Presets
+    bool[] usedPresets;
+    public List<GameObject> disabledPresetObjs;
+
     void Start()
     {
+        usedPresets = new bool[6];
+        for (int i = 0; i < 6; i++) usedPresets[i] = false;
         audioUI = GetComponent<AudioSource>();
         EventSystem.current.SetSelectedGameObject(null, null);
         panelSamplers.SetActive(false);
@@ -228,6 +234,36 @@ public class InputHandler : MonoBehaviour
         {
             // TODO: Abrir un menú con las opciones (Silenciar, Mover, Eliminar...)
             // de momento: borrar el objeto
+            string n = soundObjManager.getObjectType(cursorX, cursorY);
+            switch (n)
+            {
+                case "/bellPreset":
+                    usedPresets[0] = false;
+                    disabledPresetObjs[0].SetActive(false);
+                    break;
+                case "/pianoPreset":
+                    usedPresets[1] = false;
+                    disabledPresetObjs[1].SetActive(false);
+                    break;
+                case "/drumPreset2":
+                    usedPresets[2] = false;
+                    disabledPresetObjs[2].SetActive(false);
+                    break;
+                case "/violinPreset":
+                    usedPresets[3] = false;
+                    disabledPresetObjs[3].SetActive(false);
+                    break;
+                case "/guitarPreset":
+                    usedPresets[4] = false;
+                    disabledPresetObjs[4].SetActive(false);
+                    break;
+                case "/flutePreset":
+                    usedPresets[5] = false;
+                    disabledPresetObjs[5].SetActive(false);
+                    break;
+                default:
+                    break;
+            }
             if (soundObjects[cursorY, cursorX] != null) soundObjManager.removeSoundObject(cursorX, cursorY);
         }
         else if (selectedSoundObject == null && Input.GetButtonDown("Button X"))
@@ -350,31 +386,65 @@ public class InputHandler : MonoBehaviour
     public void AddSynth(string name)
     {
         // Instantiate instrument in the scenario and add it to SuperCollider
-        GameObject soundObj = instrumentPrefabs[0];
+        GameObject soundObj = null;
         switch (name)
         {
             case "/bellPreset":
-                soundObj = instrumentPrefabs[0];
+                if (!usedPresets[0])
+                {
+                    soundObj = instrumentPrefabs[0];
+                    usedPresets[0] = true;
+                    disabledPresetObjs[0].SetActive(true);
+                }
                 break;
             case "/pianoPreset":
-                soundObj = instrumentPrefabs[1];
+                if (!usedPresets[1])
+                {
+                    soundObj = instrumentPrefabs[1];
+                    usedPresets[1] = true;
+                    disabledPresetObjs[1].SetActive(true);
+                }
                 break;
             case "/drumPreset2":
-                soundObj = instrumentPrefabs[2];
+                if (!usedPresets[2])
+                {
+                    soundObj = instrumentPrefabs[2];
+                    usedPresets[2] = true;
+                    disabledPresetObjs[2].SetActive(true);
+                }
                 break;
             case "/violinPreset":
-                soundObj = instrumentPrefabs[3];
+                if (!usedPresets[3])
+                {
+                    soundObj = instrumentPrefabs[3];
+                    usedPresets[3] = true;
+                    disabledPresetObjs[3].SetActive(true);
+                }
                 break;
             case "/guitarPreset":
-                soundObj = instrumentPrefabs[4];
+                if (!usedPresets[4])
+                {
+                    soundObj = instrumentPrefabs[4];
+                    usedPresets[4] = true;
+                    disabledPresetObjs[4].SetActive(true);
+                }
                 break;
             case "/flutePreset":
-                soundObj = instrumentPrefabs[5];
+                if (!usedPresets[5])
+                {
+                    soundObj = instrumentPrefabs[5];
+                    usedPresets[5] = true;
+                    disabledPresetObjs[5].SetActive(true);
+                }
                 break;
             default:
                 break;
         }
-        soundObj.GetComponent<Sound>().isPreset = true;
-        soundObjManager.addSoundObject(name, soundObj);
+
+        if (soundObj != null)
+        {
+            soundObj.GetComponent<Sound>().isPreset = true;
+            soundObjManager.addSoundObject(name, soundObj);
+        }
     }
 }

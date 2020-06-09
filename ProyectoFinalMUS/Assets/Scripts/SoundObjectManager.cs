@@ -131,6 +131,11 @@ public class SoundObjectManager : MonoBehaviour
         }
     }
 
+    public string getObjectType(int x, int y)
+    {
+        return objectTypes[y, x];
+    }
+
     public GameObject[,] getSoundObjects()
     {
         return soundObjects;
