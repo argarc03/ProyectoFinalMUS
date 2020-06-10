@@ -10,11 +10,13 @@ public class InputHandler : MonoBehaviour
     public GameObject panelSamplers;
     public List<GameObject> buttonsSampler = new List<GameObject>();
     public GameObject samplersSelector;
+    public GameObject rtIcon;
 
     // Presets menu & buttons
     public GameObject panelPresets;
     public List<GameObject> buttonsPresets = new List<GameObject>();
     public GameObject presetsSelector;
+    public GameObject ltIcon;
 
     float angleSector;
 
@@ -44,7 +46,7 @@ public class InputHandler : MonoBehaviour
 
     // Piano
     public GameObject pianoPanel;
-    public GameObject drumsPanel;
+    public GameObject instrumentControls, drumsControls;
 
     public AudioClip openWheelClip;
     public AudioClip changeInstrumentClip;
@@ -91,7 +93,19 @@ public class InputHandler : MonoBehaviour
             closePiano();
         }
 
-        if (!objectNavigationMode && (Input.GetAxis("LeftHorizontal") != 0 || Input.GetAxis("LeftVertical") != 0) && soundObjManager.getNumOfSounds() > 0)
+        // Trigger icons
+        if (!pianoPanel.activeSelf && Input.GetAxis("LeftTrigger") == 0 && Input.GetAxis("RightTrigger") == 0)
+        {
+            ltIcon.SetActive(true);
+            rtIcon.SetActive(true);
+        }
+        else
+        {
+            ltIcon.SetActive(false);
+            rtIcon.SetActive(false);
+        }
+
+            if (!objectNavigationMode && (Input.GetAxis("LeftHorizontal") != 0 || Input.GetAxis("LeftVertical") != 0) && soundObjManager.getNumOfSounds() > 0)
             setCursorNavigationMode(true);
         else if (objectNavigationMode && (Input.GetButtonDown("Button B") || soundObjManager.getNumOfSounds() == 0))
             setCursorNavigationMode(false);
@@ -191,8 +205,8 @@ public class InputHandler : MonoBehaviour
             panelPresets.SetActive(false);
         }
 
-        // Select button with left joystick
-        if (panelPresets.activeSelf)
+            // Select button with left joystick
+            if (panelPresets.activeSelf)
         {
             float posX = Input.GetAxis("LeftHorizontal");
             float posY = Input.GetAxis("LeftVertical");
@@ -368,6 +382,8 @@ public class InputHandler : MonoBehaviour
     void closePiano()
     {
         pianoPanel.SetActive(false);
+        drumsControls.SetActive(false);
+        instrumentControls.SetActive(false);
         pianoPanel.GetComponent<RecordingController>().deactivatePiano();
 
         //audioUI.PlayOneShot();
@@ -376,6 +392,10 @@ public class InputHandler : MonoBehaviour
     public void openPiano(string name)
     {
         pianoPanel.SetActive(true);
+        if (name != "/drums")
+            instrumentControls.SetActive(true);
+        else
+            drumsControls.SetActive(true);
         pianoPanel.GetComponent<RecordingController>().init(name, instrumentPrefabs);
 
         pianoPanel.GetComponent<RecordingController>().icon.sprite = selectedSample.GetComponent<Button>().image.sprite;

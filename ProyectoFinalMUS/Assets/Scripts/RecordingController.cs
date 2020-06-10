@@ -14,8 +14,11 @@ public class RecordingController : MonoBehaviour
     public GameObject pianoItem;
     bool instantiateItem = false;
     int itemY = 0;
+    public float verticalSpacing = 1.0f;
+    public float verticalOffset = 200.0f;
 
     List<GameObject> itemsGO = new List<GameObject>();
+    Color currentColor = Color.grey;
 
     public List<Vector3> items = new List<Vector3>(); // time pos, freq, start/stop
     Vector3 item;
@@ -205,8 +208,9 @@ public class RecordingController : MonoBehaviour
         if (pianoPlaying && instantiateItem && (timeControl.time % 0.05f) < 0.05f)
         {
             Vector3 itemPos = timeBar.transform.position;
-            itemPos.y = itemY * 20 + 150;
+            itemPos.y = (itemY * verticalSpacing) + verticalOffset;
             GameObject go = Instantiate(pianoItem, itemPos, Quaternion.identity, transform.parent);
+            go.GetComponent<Image>().color = currentColor;
             itemsGO.Add(go);
             itemsGOSets[itemsGOSets.Count - 1].Add(go);
         }
@@ -250,7 +254,7 @@ public class RecordingController : MonoBehaviour
         {
             if (items.Count == 0 || i == 0 || (items.Count != 0 && i - 1 >= 0 && i - 1 < items.Count && items[i - 1].z == -1))
             {
-                if (!pianoPlaying) /* < item.x && items[i].x < item.x)*/
+                if (!pianoPlaying)
                 {
                     pianoPlaying = true;
                     itemY = 3;
@@ -258,6 +262,7 @@ public class RecordingController : MonoBehaviour
                     item.z = 1;
                     items.Add(item);
                     itemsGOSets.Add(new List<GameObject>());
+                    currentColor = Color.red;
                 }
             }
         }
@@ -273,6 +278,7 @@ public class RecordingController : MonoBehaviour
                     item.z = 1;
                     items.Add(item);
                     itemsGOSets.Add(new List<GameObject>());
+                    currentColor = Color.blue;
                 }
             }
         }
@@ -288,6 +294,7 @@ public class RecordingController : MonoBehaviour
                     item.z = 1;
                     items.Add(item);
                     itemsGOSets.Add(new List<GameObject>());
+                    currentColor = Color.yellow;
                 }
             }
         }
@@ -303,6 +310,7 @@ public class RecordingController : MonoBehaviour
                     item.z = 1;
                     items.Add(item);
                     itemsGOSets.Add(new List<GameObject>());
+                    currentColor = Color.green;
                 }
             }
         }
@@ -318,6 +326,7 @@ public class RecordingController : MonoBehaviour
                     item.z = 1;
                     items.Add(item);
                     itemsGOSets.Add(new List<GameObject>());
+                    currentColor = Color.yellow;
                 }
             }
         }
@@ -333,6 +342,7 @@ public class RecordingController : MonoBehaviour
                     item.z = 1;
                     items.Add(item);
                     itemsGOSets.Add(new List<GameObject>());
+                    currentColor = Color.blue;
                 }
             }
         }
@@ -348,6 +358,7 @@ public class RecordingController : MonoBehaviour
                     item.z = 1;
                     items.Add(item);
                     itemsGOSets.Add(new List<GameObject>());
+                    currentColor = Color.green;
                 }
             }
         }
@@ -363,6 +374,7 @@ public class RecordingController : MonoBehaviour
                     item.z = 1;
                     items.Add(item);
                     itemsGOSets.Add(new List<GameObject>());
+                    currentColor = Color.red;
                 }
             }
         }
