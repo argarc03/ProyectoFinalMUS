@@ -4584,6 +4584,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pianoActive: 0
+  pianoPlaying: 0
   name: 
   timeBar: {fileID: 115891483}
   pianoItem: {fileID: 6404934460121445726, guid: 40927279aee515d44925601c914cfae5,
@@ -4591,6 +4592,7 @@ MonoBehaviour:
   verticalSpacing: 24
   verticalOffset: 113
   items: []
+  i: 0
   timeControl: {fileID: 963194232}
   soundObjManager: {fileID: 1684953576}
   values: []
@@ -20233,7 +20235,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2084010288
 Transform:
   m_ObjectHideFlags: 0

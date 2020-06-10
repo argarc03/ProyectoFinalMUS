@@ -49,6 +49,12 @@ public class RecordingController : MonoBehaviour
     AudioSource audioUI;
 
     bool inputAfterEnd = false;
+    public Stack<int> additionOrder = new Stack<int>();
+
+    static int SortByTimePos(Vector3 p1, Vector3 p2)
+    {
+        return p1.x.CompareTo(p2.x);
+    }
 
     void Start()
     {
@@ -147,11 +153,25 @@ public class RecordingController : MonoBehaviour
             // DESTROY LAST SOUND ITEM
             // destroy the stop and start of the
             // last item added
-            if (i - 1 == items.Count - 2)
+
+            // en la nota
+            if (i - 1 == additionOrder.Peek() - 1)
+            {
                 OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, -1, items[i - 1].y);
 
-            items.RemoveAt(items.Count - 1);
-            items.RemoveAt(items.Count - 1);
+                i--;
+                if (i < 0) i = 0;
+            }
+            // detras de la nota
+            else if (i > additionOrder.Peek())
+            {
+                i -= 2;
+                if (i < 0) i = 0;
+            }
+
+
+            items.RemoveAt(additionOrder.Pop());
+            items.RemoveAt(additionOrder.Pop());
 
             // DESTROY LAST GAMEOBJECTS SET
             // remove all the instances of the last item added
@@ -162,10 +182,9 @@ public class RecordingController : MonoBehaviour
                 itemsGOSets.RemoveAt(itemsGOSets.Count - 1);
             }
 
-            /* i -= 2;
-             if (i < 0) i = 0;*/
-
             audioUI.PlayOneShot(undoClip, 0.8f);
+
+            items.Sort(SortByTimePos);
         }
     }
 
@@ -213,6 +232,9 @@ public class RecordingController : MonoBehaviour
             go.GetComponent<Image>().color = currentColor;
             itemsGO.Add(go);
             itemsGOSets[itemsGOSets.Count - 1].Add(go);
+
+            //sort
+            items.Sort(SortByTimePos);
         }
     }
 
@@ -230,9 +252,9 @@ public class RecordingController : MonoBehaviour
         float DPADposY = Input.GetAxis("DPADVertical");
 
         instantiateItem = true;
-
         item.x = timeControl.time;
 
+        // starts pressing a button
         if (inputAfterEnd)
         {
             if (!Input.anyKey)
@@ -240,12 +262,14 @@ public class RecordingController : MonoBehaviour
             return;
         }
 
+        // reach end
         if (pianoPlaying && items[items.Count - 1].z == 1 && item.x >= timeControl.maxTime - 0.05f)
         {
             pianoPlaying = false;
             inputAfterEnd = true;
             item.z = -1;
             items.Add(item);
+            additionOrder.Push(i);
 
             return;
         }
@@ -261,6 +285,7 @@ public class RecordingController : MonoBehaviour
                     item.y = values[0];
                     item.z = 1;
                     items.Add(item);
+                    additionOrder.Push(i);
                     itemsGOSets.Add(new List<GameObject>());
                     currentColor = Color.red;
                 }
@@ -277,6 +302,7 @@ public class RecordingController : MonoBehaviour
                     item.y = values[1];
                     item.z = 1;
                     items.Add(item);
+                    additionOrder.Push(i);
                     itemsGOSets.Add(new List<GameObject>());
                     currentColor = Color.blue;
                 }
@@ -293,6 +319,7 @@ public class RecordingController : MonoBehaviour
                     item.y = values[2];
                     item.z = 1;
                     items.Add(item);
+                    additionOrder.Push(i);
                     itemsGOSets.Add(new List<GameObject>());
                     currentColor = Color.yellow;
                 }
@@ -309,6 +336,7 @@ public class RecordingController : MonoBehaviour
                     item.y = values[3];
                     item.z = 1;
                     items.Add(item);
+                    additionOrder.Push(i);
                     itemsGOSets.Add(new List<GameObject>());
                     currentColor = Color.green;
                 }
@@ -325,6 +353,7 @@ public class RecordingController : MonoBehaviour
                     item.y = values[4];
                     item.z = 1;
                     items.Add(item);
+                    additionOrder.Push(i);
                     itemsGOSets.Add(new List<GameObject>());
                     currentColor = Color.yellow;
                 }
@@ -341,6 +370,7 @@ public class RecordingController : MonoBehaviour
                     item.y = values[5];
                     item.z = 1;
                     items.Add(item);
+                    additionOrder.Push(i);
                     itemsGOSets.Add(new List<GameObject>());
                     currentColor = Color.blue;
                 }
@@ -357,6 +387,7 @@ public class RecordingController : MonoBehaviour
                     item.y = values[6];
                     item.z = 1;
                     items.Add(item);
+                    additionOrder.Push(i);
                     itemsGOSets.Add(new List<GameObject>());
                     currentColor = Color.green;
                 }
@@ -373,6 +404,7 @@ public class RecordingController : MonoBehaviour
                     item.y = values[7];
                     item.z = 1;
                     items.Add(item);
+                    additionOrder.Push(i);
                     itemsGOSets.Add(new List<GameObject>());
                     currentColor = Color.red;
                 }
@@ -382,11 +414,12 @@ public class RecordingController : MonoBehaviour
         {
             if (pianoPlaying)
             {
-                //OSCHandler.Instance.SendMessageToClient("SuperCollider", "/piano", -1.0, -1, 0);
                 pianoPlaying = false;
 
                 item.z = -1;
                 items.Add(item);
+                additionOrder.Push(i);
+                items.Sort(SortByTimePos);
             }
 
             instantiateItem = false;

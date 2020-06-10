@@ -28,14 +28,10 @@ public class Sound : MonoBehaviour
         meshRenderer.GetMaterials(aux);
 
         for (int i = 0; i < aux.Count; i++)
-        {
             originalMaterials[i] = aux[i];
-        }
 
         for (int j = 0; j < originalMaterials.Length; j++)
-        {
             muteMaterials[j] = muteMaterial;
-        }
     }
 
     void Update()
@@ -62,21 +58,17 @@ public class Sound : MonoBehaviour
     public void mute(int index)
     {
         meshRenderer.materials = muteMaterials;
-        //person.SetActive(false);
         muted = true;
 
         if (isPreset)
             OSCHandler.Instance.SendSoundVolumeMessage("SuperCollider", index, 0.0f);
-        else
+        else if (i >= 0 && i < items.Count)
             OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, -1, items[i].y);
     }
 
     public void desmute(int index)
     {
-
         meshRenderer.materials = originalMaterials;
-
-        //person.SetActive(true);
         muted = false;
 
         if (isPreset)
