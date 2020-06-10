@@ -6,7 +6,7 @@ using UnityEngine;
 public class RecordingController : MonoBehaviour
 {
     public bool pianoActive = false;
-    bool pianoPlaying = false;
+    public bool pianoPlaying = false;
     public string name = ""; //usar esto cuando se añadan varios instrumentos!!!!
 
     public GameObject timeBar;
@@ -19,7 +19,7 @@ public class RecordingController : MonoBehaviour
 
     public List<Vector3> items = new List<Vector3>(); // time pos, freq, start/stop
     Vector3 item;
-    int i = 0;
+    public int i = 0;
 
     List<List<GameObject>> itemsGOSets = new List<List<GameObject>>();
 
@@ -44,6 +44,8 @@ public class RecordingController : MonoBehaviour
     public AudioClip undoClip;
     public AudioClip cleanClip;
     AudioSource audioUI;
+
+    bool inputAfterEnd = false;
 
     void Start()
     {
@@ -120,24 +122,31 @@ public class RecordingController : MonoBehaviour
 
     public void acceptCreation()
     {
-        Sound sound = soundObj.GetComponent<Sound>();
-        sound.items = items;
-        sound.name = name;
-        sound.timeControl = timeControl;
-        sound.isPreset = false;
+        if (!pianoPlaying)
+        {
+            Sound sound = soundObj.GetComponent<Sound>();
+            sound.items = items;
+            sound.name = name;
+            sound.timeControl = timeControl;
+            sound.isPreset = false;
 
-        //OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, -1, items[i].y);
+            if (i - 1 >= 0 && items[i - 1].z == 1)
+                OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, -1, items[i - 1].y);
 
-        soundObjManager.addSoundObject(name, soundObj);
+            soundObjManager.addSoundObject(name, soundObj);
+        }
     }
 
     public void undo()
     {
-        if (items.Count != 0)
+        if (!pianoPlaying && items.Count != 0)
         {
             // DESTROY LAST SOUND ITEM
             // destroy the stop and start of the
             // last item added
+            if (i - 1 == items.Count - 2)
+                OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, -1, items[i - 1].y);
+
             items.RemoveAt(items.Count - 1);
             items.RemoveAt(items.Count - 1);
 
@@ -150,13 +159,16 @@ public class RecordingController : MonoBehaviour
                 itemsGOSets.RemoveAt(itemsGOSets.Count - 1);
             }
 
+            /* i -= 2;
+             if (i < 0) i = 0;*/
+
             audioUI.PlayOneShot(undoClip, 0.8f);
         }
     }
 
     public void cleanAll()
     {
-        if (items.Count != 0)
+        if (!pianoPlaying && items.Count != 0)
         {
             pianoPlaying = false;
 
@@ -165,6 +177,8 @@ public class RecordingController : MonoBehaviour
             foreach (GameObject go in itemsGO)
                 Destroy(go);
             itemsGO.Clear();
+
+            i = 0;
 
             if (pianoActive)
                 audioUI.PlayOneShot(cleanClip, 0.7f);
@@ -188,7 +202,7 @@ public class RecordingController : MonoBehaviour
 
     void createItem()
     {
-        if (instantiateItem && (timeControl.time % 0.05f) < 0.05f)
+        if (pianoPlaying && instantiateItem && (timeControl.time % 0.05f) < 0.05f)
         {
             Vector3 itemPos = timeBar.transform.position;
             itemPos.y = itemY * 20 + 150;
@@ -215,100 +229,141 @@ public class RecordingController : MonoBehaviour
 
         item.x = timeControl.time;
 
+        if (inputAfterEnd)
+        {
+            if (!Input.anyKey)
+                inputAfterEnd = false;
+            return;
+        }
+
+        if (pianoPlaying && items[items.Count - 1].z == 1 && item.x >= timeControl.maxTime - 0.05f)
+        {
+            pianoPlaying = false;
+            inputAfterEnd = true;
+            item.z = -1;
+            items.Add(item);
+
+            return;
+        }
+
         if (DPADposX > 0) // RIGHT
         {
-            if (!pianoPlaying)
+            if (items.Count == 0 || i == 0 || (items.Count != 0 && i - 1 >= 0 && i - 1 < items.Count && items[i - 1].z == -1))
             {
-                pianoPlaying = true;
-                itemY = 3;
-                item.y = values[0];
-                item.z = 1;
-                items.Add(item);
-                itemsGOSets.Add(new List<GameObject>());
+                if (!pianoPlaying) /* < item.x && items[i].x < item.x)*/
+                {
+                    pianoPlaying = true;
+                    itemY = 3;
+                    item.y = values[0];
+                    item.z = 1;
+                    items.Add(item);
+                    itemsGOSets.Add(new List<GameObject>());
+                }
             }
         }
         else if (DPADposX < 0) // LEFT
         {
-            if (!pianoPlaying)
+            if (items.Count == 0 || i == 0 || (items.Count != 0 && i - 1 >= 0 && i - 1 < items.Count && items[i - 1].z == -1))
             {
-                pianoPlaying = true;
-                itemY = 1;
-                item.y = values[1];
-                item.z = 1;
-                items.Add(item);
-                itemsGOSets.Add(new List<GameObject>());
+                if (!pianoPlaying)
+                {
+                    pianoPlaying = true;
+                    itemY = 1;
+                    item.y = values[1];
+                    item.z = 1;
+                    items.Add(item);
+                    itemsGOSets.Add(new List<GameObject>());
+                }
             }
         }
         else if (DPADposY > 0) // UP
         {
-            if (!pianoPlaying)
+            if (items.Count == 0 || i == 0 || (items.Count != 0 && i - 1 >= 0 && i - 1 < items.Count && items[i - 1].z == -1))
             {
-                pianoPlaying = true;
-                itemY = 0;
-                item.y = values[2];
-                item.z = 1;
-                items.Add(item);
-                itemsGOSets.Add(new List<GameObject>());
+                if (!pianoPlaying)
+                {
+                    pianoPlaying = true;
+                    itemY = 0;
+                    item.y = values[2];
+                    item.z = 1;
+                    items.Add(item);
+                    itemsGOSets.Add(new List<GameObject>());
+                }
             }
         }
         else if (DPADposY < 0) // DOWN
         {
-            if (!pianoPlaying)
+            if (items.Count == 0 || i == 0 || (items.Count != 0 && i - 1 >= 0 && i - 1 < items.Count && items[i - 1].z == -1))
             {
-                pianoPlaying = true;
-                itemY = 2;
-                item.y = values[3];
-                item.z = 1;
-                items.Add(item);
-                itemsGOSets.Add(new List<GameObject>());
+                if (!pianoPlaying)
+                {
+                    pianoPlaying = true;
+                    itemY = 2;
+                    item.y = values[3];
+                    item.z = 1;
+                    items.Add(item);
+                    itemsGOSets.Add(new List<GameObject>());
+                }
             }
         }
         else if (Input.GetButton("Button Y")) // Y
         {
-            if (!pianoPlaying)
+            if (items.Count == 0 || i == 0 || (items.Count != 0 && i - 1 >= 0 && i - 1 < items.Count && items[i - 1].z == -1))
             {
-                pianoPlaying = true;
-                itemY = 4;
-                item.y = values[4];
-                item.z = 1;
-                items.Add(item);
-                itemsGOSets.Add(new List<GameObject>());
+                if (!pianoPlaying)
+                {
+                    pianoPlaying = true;
+                    itemY = 4;
+                    item.y = values[4];
+                    item.z = 1;
+                    items.Add(item);
+                    itemsGOSets.Add(new List<GameObject>());
+                }
             }
         }
         else if (Input.GetButton("Button X")) // X
         {
-            if (!pianoPlaying)
+            if (items.Count == 0 || i == 0 || (items.Count != 0 && i - 1 >= 0 && i - 1 < items.Count && items[i - 1].z == -1))
             {
-                pianoPlaying = true;
-                itemY = 5;
-                item.y = values[5];
-                item.z = 1;
-                items.Add(item);
-                itemsGOSets.Add(new List<GameObject>());
+                if (!pianoPlaying)
+                {
+                    pianoPlaying = true;
+                    itemY = 5;
+                    item.y = values[5];
+                    item.z = 1;
+                    items.Add(item);
+                    itemsGOSets.Add(new List<GameObject>());
+                }
             }
         }
         else if (Input.GetButton("Button A")) // A
         {
-            if (!pianoPlaying)
+            if (items.Count == 0 || i == 0 || (items.Count != 0 && i - 1 >= 0 && i - 1 < items.Count && items[i - 1].z == -1))
             {
-                pianoPlaying = true;
-                itemY = 6;
-                item.y = values[6];
-                item.z = 1;
-                items.Add(item);
-                itemsGOSets.Add(new List<GameObject>());
+                if (!pianoPlaying)
+                {
+                    pianoPlaying = true;
+                    itemY = 6;
+                    item.y = values[6];
+                    item.z = 1;
+                    items.Add(item);
+                    itemsGOSets.Add(new List<GameObject>());
+                }
             }
         }
         else if (Input.GetButton("Button B")) // B
         {
-            if (!pianoPlaying)
+            if (items.Count == 0 || i == 0 || (items.Count != 0 && i - 1 >= 0 && i - 1 < items.Count && items[i - 1].z == -1))
             {
-                pianoPlaying = true;
-                itemY = 7;
-                item.y = values[7];
-                item.z = 1;
-                items.Add(item);
-                itemsGOSets.Add(new List<GameObject>());
+                if (!pianoPlaying)
+                {
+                    pianoPlaying = true;
+                    itemY = 7;
+                    item.y = values[7];
+                    item.z = 1;
+                    items.Add(item);
+                    itemsGOSets.Add(new List<GameObject>());
+                }
             }
         }
         else

@@ -84,7 +84,8 @@ public class InputHandler : MonoBehaviour
         if (pianoPanel.activeSelf && Input.GetButtonDown("Share"))
             pianoPanel.GetComponent<RecordingController>().undo();
 
-        if (pianoPanel.activeSelf && pianoPanel.GetComponent<RecordingController>().items.Count != 0 && Input.GetAxis("RightBumper") != 0)
+        if (pianoPanel.activeSelf && !pianoPanel.GetComponent<RecordingController>().pianoPlaying 
+            && pianoPanel.GetComponent<RecordingController>().items.Count != 0 && Input.GetAxis("RightBumper") != 0)
         {
             pianoPanel.GetComponent<RecordingController>().acceptCreation();
             closePiano();
