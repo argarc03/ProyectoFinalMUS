@@ -14,8 +14,11 @@ public class RecordingController : MonoBehaviour
     public GameObject pianoItem;
     bool instantiateItem = false;
     int itemY = 0;
+    public float verticalSpacing = 1.0f;
+    public float verticalOffset = 200.0f;
 
     List<GameObject> itemsGO = new List<GameObject>();
+    Color currentColor = Color.grey;
 
     public List<Vector3> items = new List<Vector3>(); // time pos, freq, start/stop
     Vector3 item;
@@ -191,8 +194,9 @@ public class RecordingController : MonoBehaviour
         if (instantiateItem && (timeControl.time % 0.05f) < 0.05f)
         {
             Vector3 itemPos = timeBar.transform.position;
-            itemPos.y = itemY * 20 + 150;
+            itemPos.y = (itemY * verticalSpacing) + verticalOffset;
             GameObject go = Instantiate(pianoItem, itemPos, Quaternion.identity, transform.parent);
+            go.GetComponent<Image>().color = currentColor;
             itemsGO.Add(go);
             itemsGOSets[itemsGOSets.Count - 1].Add(go);
         }
@@ -225,6 +229,7 @@ public class RecordingController : MonoBehaviour
                 item.z = 1;
                 items.Add(item);
                 itemsGOSets.Add(new List<GameObject>());
+                currentColor = Color.red;
             }
         }
         else if (DPADposX < 0) // LEFT
@@ -237,6 +242,7 @@ public class RecordingController : MonoBehaviour
                 item.z = 1;
                 items.Add(item);
                 itemsGOSets.Add(new List<GameObject>());
+                currentColor = Color.blue;
             }
         }
         else if (DPADposY > 0) // UP
@@ -249,6 +255,7 @@ public class RecordingController : MonoBehaviour
                 item.z = 1;
                 items.Add(item);
                 itemsGOSets.Add(new List<GameObject>());
+                currentColor = Color.yellow;
             }
         }
         else if (DPADposY < 0) // DOWN
@@ -261,6 +268,7 @@ public class RecordingController : MonoBehaviour
                 item.z = 1;
                 items.Add(item);
                 itemsGOSets.Add(new List<GameObject>());
+                currentColor = Color.green;
             }
         }
         else if (Input.GetButton("Button Y")) // Y
@@ -273,6 +281,7 @@ public class RecordingController : MonoBehaviour
                 item.z = 1;
                 items.Add(item);
                 itemsGOSets.Add(new List<GameObject>());
+                currentColor = Color.yellow;
             }
         }
         else if (Input.GetButton("Button X")) // X
@@ -285,6 +294,7 @@ public class RecordingController : MonoBehaviour
                 item.z = 1;
                 items.Add(item);
                 itemsGOSets.Add(new List<GameObject>());
+                currentColor = Color.blue;
             }
         }
         else if (Input.GetButton("Button A")) // A
@@ -297,6 +307,7 @@ public class RecordingController : MonoBehaviour
                 item.z = 1;
                 items.Add(item);
                 itemsGOSets.Add(new List<GameObject>());
+                currentColor = Color.green;
             }
         }
         else if (Input.GetButton("Button B")) // B
@@ -309,6 +320,7 @@ public class RecordingController : MonoBehaviour
                 item.z = 1;
                 items.Add(item);
                 itemsGOSets.Add(new List<GameObject>());
+                currentColor = Color.red;
             }
         }
         else

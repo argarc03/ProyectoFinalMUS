@@ -1,37 +1,18 @@
-s.boot
+// INSTRUCCIONES:
+// 1. Inicia el servidor pulsando CTRL + B
+// 2. Evalúa el código a partir del siguiente paréntesis pulsando CTRL + ESPACIO
+// 3. Abre la aplicación
 
+// INSTRUCTIONS:
+// 1. Boot the server pressing CTRL + B
+// 2. Evaluate the code from the following parenthesis by pressing CTRL + SPACEBAR
+// 3. Launch the application
 
-
-/**********************************************************/
-//                     BUFFER DICTIONARY                 //
-/********************************************************/
 
 (
-d = Dictionary.new;
-d.add(\drums -> PathName("Audio/Drums/").entries.collect({
-	arg sf;
-	Buffer.read(s, sf.fullPath);
-    })
-);
 
-d.add(\piano -> PathName("Audio/Piano/").entries.collect({
-	arg sf;
-	Buffer.read(s, sf.fullPath);
-    })
-)
-)
+// VARIABLE DECLARATION
 
-
-
-
-
-/**********************************************************/
-//                     SYNTH DEFINITIONS                 //
-/********************************************************/
-
-// Sin Synth
-
-(
 var crash = d[\drums][0],
 fTom = d[\drums][1],
 hTom = d[\drums][2],
@@ -55,8 +36,39 @@ far = 1.059463**(-4),
 solr = 1.059463**(-2),
 lar = 1.059463**(0),
 sir = 1.059463**(2),
-doAr = 1.059463**(3);
+doAr = 1.059463**(3),
+// OSC Variables
+square, sin = nil, flute, guitar, violin, bell, drum, pianoBuf, objects;
 
+
+/**********************************************************/
+//                     BUFFER DICTIONARY                 //
+/********************************************************/
+ScIDE.handshake;
+
+d = Dictionary.new;
+d.add(\drums -> PathName("Audio/Drums/").entries.collect({
+	arg sf;
+	Buffer.read(s, sf.fullPath);
+    })
+);
+
+d.add(\piano -> PathName("Audio/Piano/").entries.collect({
+	arg sf;
+	Buffer.read(s, sf.fullPath);
+    })
+);
+
+
+
+
+
+
+/**********************************************************/
+//                     SYNTH DEFINITIONS                 //
+/********************************************************/
+
+// Sin Synth
 
 SynthDef(\sinSynth,
 	{
@@ -465,24 +477,21 @@ Pdef.new(
 	    //\rate, 1,
 	    \amp, 0.35,
 	);
-)
-)
+);
+
 
 /**********************************************************/
 //                     END OF SYNTH DEFINITIONS          //
 /********************************************************/
 
 
-Pdef(\bellPdef).play;
 
-Pdef(\bellPdef).stop;
 
 /**********************************************************/
 //                     OSC DEFINITIONS                   //
 /********************************************************/
-(
-	// Variables
-	var square, sin = nil, flute, guitar, violin, bell, drum, pianoBuf, objects;
+
+
 
 	// Stop all
 
@@ -770,6 +779,7 @@ OSCdef.new(
 	// PRESETS OSC
     /******************************************************/
 
+
 	// Rhythm 1 preset
 	OSCdef.new(
 		\drumPreset1,
@@ -921,10 +931,16 @@ OSCdef.new(
 //                     END OF OSC DEFINITIONS            //
 /********************************************************/
 
+
+
+
+
+/***
+
+TESTING
+
+***/
 ScIDE.handshake; // Ejecutar si da error al guardar
-
-
-
 
 // LOOPS
 
