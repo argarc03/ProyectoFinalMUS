@@ -50,6 +50,9 @@ public class RecordingController : MonoBehaviour
 
     bool inputAfterEnd = false;
     public Stack<int> additionOrder = new Stack<int>();
+    int oldI;
+    bool soundPlaying;
+    float offset = 0.02f;
 
     static int SortByTimePos(Vector3 p1, Vector3 p2)
     {
@@ -159,6 +162,8 @@ public class RecordingController : MonoBehaviour
             {
                 OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, -1, items[i - 1].y);
 
+                soundPlaying = false;
+
                 i--;
                 if (i < 0) i = 0;
             }
@@ -182,6 +187,8 @@ public class RecordingController : MonoBehaviour
                 itemsGOSets.RemoveAt(itemsGOSets.Count - 1);
             }
 
+            
+
             audioUI.PlayOneShot(undoClip, 0.8f);
 
             items.Sort(SortByTimePos);
@@ -193,6 +200,7 @@ public class RecordingController : MonoBehaviour
         if (!pianoPlaying && items.Count != 0)
         {
             pianoPlaying = false;
+            soundPlaying = false;
 
             OSCHandler.Instance.SendMessageToClient("SuperCollider", name, -1, -1, -1);
             items.Clear();
@@ -215,6 +223,14 @@ public class RecordingController : MonoBehaviour
 
     void playItems()
     {
+        if (i < items.Count && (timeControl.time >= items[i].x - offset))
+        {
+            if (items[i].z == 1)
+                soundPlaying = true;
+            else if (items[i].z == -1)
+                soundPlaying = false;
+        }
+
         if (i < items.Count && (timeControl.time <= items[i].x + 0.01f && timeControl.time >= items[i].x - 0.01f))
         {
             OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, items[i].z, items[i].y);
@@ -243,7 +259,28 @@ public class RecordingController : MonoBehaviour
         if (timeControl.time <= 0.01f)
             i = 0;
 
+        //print(soundPlaying);
+
         timeBar.transform.localPosition = new Vector3((timeControl.time - 1) * 75, 0f, 0f);
+    }
+
+    void addStartItem(int y, int value, Color color)
+    {
+        if (items.Count == 0 || i == 0 || (items.Count != 0 && i - 1 >= 0 && i - 1 < items.Count && items[i - 1].z == -1))
+        {
+            if (!pianoPlaying && !soundPlaying)
+            {
+                pianoPlaying = true;
+                itemY = y;
+                item.y = values[value];
+                item.z = 1;
+                items.Add(item);
+                additionOrder.Push(i);
+                itemsGOSets.Add(new List<GameObject>());
+                currentColor = color;
+                oldI = i;
+            }
+        }
     }
 
     void handleInput()
@@ -258,12 +295,16 @@ public class RecordingController : MonoBehaviour
         if (inputAfterEnd)
         {
             if (!Input.anyKey)
+            {
                 inputAfterEnd = false;
+                //print("inputafterend = false");
+            }
             return;
         }
 
-        // reach end
-        if (pianoPlaying && items[items.Count - 1].z == 1 && item.x >= timeControl.maxTime - 0.05f)
+        // reach end or start of a note
+        if (pianoPlaying && ((items[items.Count - 1].z == 1 && item.x >= timeControl.maxTime - 0.02f) ||
+            (oldI + 1 < items.Count && timeControl.time >= items[oldI + 1].x - offset)))
         {
             pianoPlaying = false;
             inputAfterEnd = true;
@@ -271,145 +312,27 @@ public class RecordingController : MonoBehaviour
             items.Add(item);
             additionOrder.Push(i);
 
+            items.Sort(SortByTimePos);
+
             return;
         }
 
         if (DPADposX > 0) // RIGHT
-        {
-            if (items.Count == 0 || i == 0 || (items.Count != 0 && i - 1 >= 0 && i - 1 < items.Count && items[i - 1].z == -1))
-            {
-                if (!pianoPlaying)
-                {
-                    pianoPlaying = true;
-                    itemY = 3;
-                    item.y = values[0];
-                    item.z = 1;
-                    items.Add(item);
-                    additionOrder.Push(i);
-                    itemsGOSets.Add(new List<GameObject>());
-                    currentColor = Color.red;
-                }
-            }
-        }
+            addStartItem(3, 0, Color.red);
         else if (DPADposX < 0) // LEFT
-        {
-            if (items.Count == 0 || i == 0 || (items.Count != 0 && i - 1 >= 0 && i - 1 < items.Count && items[i - 1].z == -1))
-            {
-                if (!pianoPlaying)
-                {
-                    pianoPlaying = true;
-                    itemY = 1;
-                    item.y = values[1];
-                    item.z = 1;
-                    items.Add(item);
-                    additionOrder.Push(i);
-                    itemsGOSets.Add(new List<GameObject>());
-                    currentColor = Color.blue;
-                }
-            }
-        }
+            addStartItem(1, 1, Color.blue);
         else if (DPADposY > 0) // UP
-        {
-            if (items.Count == 0 || i == 0 || (items.Count != 0 && i - 1 >= 0 && i - 1 < items.Count && items[i - 1].z == -1))
-            {
-                if (!pianoPlaying)
-                {
-                    pianoPlaying = true;
-                    itemY = 0;
-                    item.y = values[2];
-                    item.z = 1;
-                    items.Add(item);
-                    additionOrder.Push(i);
-                    itemsGOSets.Add(new List<GameObject>());
-                    currentColor = Color.yellow;
-                }
-            }
-        }
+            addStartItem(0, 2, Color.yellow);
         else if (DPADposY < 0) // DOWN
-        {
-            if (items.Count == 0 || i == 0 || (items.Count != 0 && i - 1 >= 0 && i - 1 < items.Count && items[i - 1].z == -1))
-            {
-                if (!pianoPlaying)
-                {
-                    pianoPlaying = true;
-                    itemY = 2;
-                    item.y = values[3];
-                    item.z = 1;
-                    items.Add(item);
-                    additionOrder.Push(i);
-                    itemsGOSets.Add(new List<GameObject>());
-                    currentColor = Color.green;
-                }
-            }
-        }
+            addStartItem(2, 3, Color.green);
         else if (Input.GetButton("Button Y")) // Y
-        {
-            if (items.Count == 0 || i == 0 || (items.Count != 0 && i - 1 >= 0 && i - 1 < items.Count && items[i - 1].z == -1))
-            {
-                if (!pianoPlaying)
-                {
-                    pianoPlaying = true;
-                    itemY = 4;
-                    item.y = values[4];
-                    item.z = 1;
-                    items.Add(item);
-                    additionOrder.Push(i);
-                    itemsGOSets.Add(new List<GameObject>());
-                    currentColor = Color.yellow;
-                }
-            }
-        }
+            addStartItem(4, 4, Color.yellow);
         else if (Input.GetButton("Button X")) // X
-        {
-            if (items.Count == 0 || i == 0 || (items.Count != 0 && i - 1 >= 0 && i - 1 < items.Count && items[i - 1].z == -1))
-            {
-                if (!pianoPlaying)
-                {
-                    pianoPlaying = true;
-                    itemY = 5;
-                    item.y = values[5];
-                    item.z = 1;
-                    items.Add(item);
-                    additionOrder.Push(i);
-                    itemsGOSets.Add(new List<GameObject>());
-                    currentColor = Color.blue;
-                }
-            }
-        }
+            addStartItem(5, 5, Color.blue);
         else if (Input.GetButton("Button A")) // A
-        {
-            if (items.Count == 0 || i == 0 || (items.Count != 0 && i - 1 >= 0 && i - 1 < items.Count && items[i - 1].z == -1))
-            {
-                if (!pianoPlaying)
-                {
-                    pianoPlaying = true;
-                    itemY = 6;
-                    item.y = values[6];
-                    item.z = 1;
-                    items.Add(item);
-                    additionOrder.Push(i);
-                    itemsGOSets.Add(new List<GameObject>());
-                    currentColor = Color.green;
-                }
-            }
-        }
+            addStartItem(6, 6, Color.green);
         else if (Input.GetButton("Button B")) // B
-        {
-            if (items.Count == 0 || i == 0 || (items.Count != 0 && i - 1 >= 0 && i - 1 < items.Count && items[i - 1].z == -1))
-            {
-                if (!pianoPlaying)
-                {
-                    pianoPlaying = true;
-                    itemY = 7;
-                    item.y = values[7];
-                    item.z = 1;
-                    items.Add(item);
-                    additionOrder.Push(i);
-                    itemsGOSets.Add(new List<GameObject>());
-                    currentColor = Color.red;
-                }
-            }
-        }
+            addStartItem(7, 7, Color.red);
         else
         {
             if (pianoPlaying)
