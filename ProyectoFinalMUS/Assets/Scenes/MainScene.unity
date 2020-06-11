@@ -4760,6 +4760,7 @@ MonoBehaviour:
   cancelClip: {fileID: 8300000, guid: 930ba338a93f1074487bed1f29d45bc3, type: 3}
   undoClip: {fileID: 8300000, guid: 881dde01773be9d4a82a34e8df88dbe1, type: 3}
   cleanClip: {fileID: 8300000, guid: ba63194223218504c89c7ec74d2d413c, type: 3}
+  exitMenu: {fileID: 1942289914}
 --- !u!82 &514905506
 AudioSource:
   m_ObjectHideFlags: 0
