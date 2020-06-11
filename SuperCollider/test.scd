@@ -526,11 +526,11 @@ OSCdef.new(
 
 			if ( [msg][0][1] == -1.0)
 			{
-				sin.free();
-				sin = nil;
+				objects[[msg][0][3]].free();
+				objects[[msg][0][3]] = nil;
 			}
 			{
-				sin = Synth(\sinSynth, [\freq, [msg][0][2]])
+				objects[[msg][0][3]] = Synth(\sinSynth, [\freq, [msg][0][2]])
 			}
 		},
 		'/sin',
@@ -549,11 +549,11 @@ OSCdef.new(
 
 			if ( [msg][0][1] == -1.0)
 			{
-				square.free();
-				square = nil;
+				objects[[msg][0][3]].free();
+				objects[[msg][0][3]] = nil;
 			}
 			{
-				square = Synth(\squareSynth, [\freq, [msg][0][2]])
+				objects[[msg][0][3]] = Synth(\squareSynth, [\freq, [msg][0][2]])
 			}
 		},
 		'/square',
@@ -572,11 +572,11 @@ OSCdef.new(
 
 			if ( [msg][0][1] == -1.0)
 			{
-				flute.free();
-				flute = nil;
+				objects[[msg][0][3]].free();
+				objects[[msg][0][3]] = nil;
 			}
 			{
-				flute = Synth(\fluteSynth, [\freq, [msg][0][2]])
+				objects[[msg][0][3]] = Synth(\fluteSynth, [\freq, [msg][0][2]])
 			}
 		},
 		'/flute',
@@ -595,11 +595,11 @@ OSCdef.new(
 
 			if ( [msg][0][1] == -1.0)
 			{
-				guitar.free();
-				guitar = nil;
+				objects[[msg][0][3]].free();
+				objects[[msg][0][3]] = nil;
 			}
 			{
-				guitar = Synth(\guitarSynth, [\freq, [msg][0][2]])
+				objects[[msg][0][3]] = Synth(\guitarSynth, [\freq, [msg][0][2]])
 			}
 		},
 		'/guitar',
@@ -618,11 +618,11 @@ OSCdef.new(
 
 			if ( [msg][0][1] == -1.0)
 			{
-				violin.free();
-				violin = nil;
+				objects[[msg][0][3]].free();
+				objects[[msg][0][3]] = nil;
 			}
 			{
-				violin = Synth(\violinSynth, [\freq, [msg][0][2]])
+				objects[[msg][0][3]] = Synth(\violinSynth, [\freq, [msg][0][2]])
 			}
 		},
 		'/violin',
@@ -641,11 +641,11 @@ OSCdef.new(
 
 			if ( [msg][0][1] == -1.0)
 			{
-				bell.free();
-				bell = nil;
+				objects[[msg][0][3]].free();
+				objects[[msg][0][3]] = nil;
 			}
 			{
-				bell = Synth(\bellSynth, [\freq, [msg][0][2]])
+				objects[[msg][0][3]] = Synth(\bellSynth, [\freq, [msg][0][2]])
 			}
 		},
 		'/bell',
@@ -663,11 +663,11 @@ OSCdef.new(
 
 			if ( [msg][0][1] == -1.0)
 			{
-				drum.free();
-				drum = nil;
+				objects[[msg][0][3]].free();
+				objects[[msg][0][3]] = nil;
 			}
 			{
-				drum = Synth(\drumBuf, [\buf, d[\drums][[msg][0][2]]])
+				objects[[msg][0][3]] = Synth(\drumBuf, [\buf, d[\drums][[msg][0][2]]])
 			}
 		},
 		'/drums',
@@ -685,11 +685,11 @@ OSCdef.new(
 
 			if ( [msg][0][1] == -1.0)
 			{
-				pianoBuf.free();
-				pianoBuf = nil;
+				objects[[msg][0][3]].free();
+				objects[[msg][0][3]] = nil;
 			}
 			{
-				pianoBuf = Synth(\pianoBuf, [\buf, d[\piano][0],
+				objects[[msg][0][3]] = Synth(\pianoBuf, [\buf, d[\piano][0],
 					\rate, 1.059463**([msg][0][2])])
 			}
 		},
@@ -1092,12 +1092,40 @@ Pdef(\test).play;
 
 Pdef(\test).stop;
 
-
-
-
-
-
-
-
-
 ////////////////////////////
+
+
+(
+// read a soundfile from disk
+b = Buffer.read(s, Platform.resourceDir +/+ "sounds/a11wlk01.wav");
+
+// a samplePlayer in mono ... one channel only
+SynthDef("aMonoSamplePlayer", { arg bus = 0, bufnum = 0, rateScale = 1;
+    Out.ar(
+        bus,
+        PlayBuf.ar(
+            1,
+            bufnum,
+            BufRateScale.kr(bufnum) * rateScale
+        )
+        *
+        EnvGen.kr(Env.sine(BufDur.kr(bufnum)))
+    )
+}).add;
+)
+
+(
+// test the synthdef ... does it work? (yes, it's fine. it plays on the left channel)
+Synth("aMonoSamplePlayer", [\bus, 0, \bufNum, b]);
+)
+
+
+(
+// a simple example of component reuse ... use the \bus argument to assign synths built from
+// the same synthdef to different channels
+// in this case, play a 1-channel soundfile on 2 channels
+// a different playback rate for each channel makes the effect more obvious
+Synth("aMonoSamplePlayer", [\bus, 0, \bufNum, b, \rateScale, 0.99]);
+Synth("aMonoSamplePlayer", [\bus, 1, \bufNum, b, \rateScale, 1.01]);
+)
+
