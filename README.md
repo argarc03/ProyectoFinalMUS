@@ -18,9 +18,10 @@ abriendo el proyecto en Unity y haciendo CTRL+B)*
 Para salir de la aplicación, pulsar START en el mando y confirmar con el botón A.
 
 ## Si no tienes mando
-Si no tienes un mando genérico de consola, puedes utilizar este programa 
-para emular el input de un mando:
-Xbox 360 Controller Emulator https://www.x360ce.com/
+Si no tienes un mando genérico de consola, puedes utilizar estos programas
+para emular el input de un mando a partir de un teclado:
+- Vjoy (http://vjoystick.sourceforge.net/site/)
+- X360 (https://www.x360ce.com/)
 
 
 
