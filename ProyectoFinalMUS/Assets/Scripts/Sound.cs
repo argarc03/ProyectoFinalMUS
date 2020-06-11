@@ -8,6 +8,7 @@ public class Sound : MonoBehaviour
     public List<Vector3> items = new List<Vector3>(); // time pos, freq, start/stop
     public TimeController timeControl;
     public string name = "";
+    public int objectIndex;
     int i = 0;
 
     MeshRenderer meshRenderer;
@@ -50,7 +51,7 @@ public class Sound : MonoBehaviour
     {
         if (i < items.Count && (timeControl.time <= items[i].x + 0.01f && timeControl.time >= items[i].x - 0.01f))
         {
-            OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, items[i].z, items[i].y);
+            OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, items[i].z, items[i].y, objectIndex);
             i++;
         }
     }
@@ -63,7 +64,7 @@ public class Sound : MonoBehaviour
         if (isPreset)
             OSCHandler.Instance.SendSoundVolumeMessage("SuperCollider", index, 0.0f);
         else if (i >= 0 && i < items.Count)
-            OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, -1, items[i].y);
+            OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, -1, items[i].y, objectIndex);
     }
 
     public void desmute(int index)

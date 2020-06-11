@@ -52,7 +52,7 @@ public class SoundObjectManager : MonoBehaviour
     {
         if (soundObjects[y, x] != null)
         {
-            OSCHandler.Instance.SendMessageToClient("SuperCollider", objectTypes[y, x], -1.0, x + y * width, -1);
+            OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", objectTypes[y, x], -1.0, -1, x + y * width);
 
             Destroy(soundObjects[y, x]);
             soundObjects[y, x] = null;
@@ -170,11 +170,13 @@ public class SoundObjectManager : MonoBehaviour
 
                     // Move object to new location
                     soundObjects[y, x].transform.position = new Vector3(x + 1, 0, -y);
-
                     // Tell SC to change order of objects too
                     int index = newX + (newY * width), newIndex = x + (y * width);
                     OSCHandler.Instance.SendSoundMoveMessage("SuperCollider", index, newIndex);
+                    //Update sound index
+                    soundObjects[y, x].GetComponent<Sound>().objectIndex = newIndex;
                     x = newX; y = newY;
+
                 }
                 else
                     reachedEnd = true;

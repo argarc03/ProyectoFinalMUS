@@ -409,7 +409,7 @@ public class InputHandler : MonoBehaviour
             instrumentControls.SetActive(true);
         else
             drumsControls.SetActive(true);
-        pianoPanel.GetComponent<RecordingController>().init(name, instrumentPrefabs);
+        pianoPanel.GetComponent<RecordingController>().init(name, instrumentPrefabs, soundObjManager.getNumOfSounds());
 
         pianoPanel.GetComponent<RecordingController>().icon.sprite = selectedSample.GetComponent<Button>().image.sprite;
 

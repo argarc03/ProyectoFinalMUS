@@ -251,11 +251,12 @@ public class OSCHandler : MonoBehaviour
         SendMessageToClient(clientId, address, temp);
     }
 
-    public void SendSoundMessageToClient<T>(string clientId, string address, T amp, float value)
+    public void SendSoundMessageToClient<T>(string clientId, string address, T amp, float value, int index)
     {
         List<object> temp = new List<object>();
         temp.Add(amp);
         temp.Add(value);
+        temp.Add(index);
         SendMessageToClient(clientId, address, temp);
     }
 

@@ -8,6 +8,7 @@ public class RecordingController : MonoBehaviour
     public bool pianoActive = false;
     public bool pianoPlaying = false;
     public string name = ""; //usar esto cuando se añadan varios instrumentos!!!!
+    public int currentObjectIndex;
 
     public GameObject timeBar;
 
@@ -75,8 +76,9 @@ public class RecordingController : MonoBehaviour
         }
     }
 
-    public void init(string insName, List<GameObject> instrumentPrefabs)
+    public void init(string insName, List<GameObject> instrumentPrefabs, int index)
     {
+        currentObjectIndex = index;
         pianoActive = true;
         InstrumentData data = null;
         switch (insName)
@@ -139,11 +141,12 @@ public class RecordingController : MonoBehaviour
             Sound sound = soundObj.GetComponent<Sound>();
             sound.items = items;
             sound.name = name;
+            sound.objectIndex = currentObjectIndex;
             sound.timeControl = timeControl;
             sound.isPreset = false;
 
             if (i - 1 >= 0 && items[i - 1].z == 1)
-                OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, -1, items[i - 1].y);
+                OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, -1, items[i - 1].y, currentObjectIndex);
 
             soundObjManager.addSoundObject(name, soundObj);
         }
@@ -160,7 +163,7 @@ public class RecordingController : MonoBehaviour
             // en la nota
             if (i - 1 == additionOrder.Peek() - 1)
             {
-                OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, -1, items[i - 1].y);
+                OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, -1, items[i - 1].y, currentObjectIndex);
 
                 soundPlaying = false;
 
@@ -202,7 +205,7 @@ public class RecordingController : MonoBehaviour
             pianoPlaying = false;
             soundPlaying = false;
 
-            OSCHandler.Instance.SendMessageToClient("SuperCollider", name, -1, -1, -1);
+            OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, -1, -1, currentObjectIndex);
             items.Clear();
             foreach (GameObject go in itemsGO)
                 Destroy(go);
@@ -227,13 +230,13 @@ public class RecordingController : MonoBehaviour
         {
             if (items[i].z == 1)
                 soundPlaying = true;
-            else if (items[i].z == -1)
+            else if (items[i].z == -1 && ((i + 1 < items.Count && (timeControl.time < items[i+1].x - offset) || i + 1 >= items.Count)))
                 soundPlaying = false;
         }
 
         if (i < items.Count && (timeControl.time <= items[i].x + 0.01f && timeControl.time >= items[i].x - 0.01f))
         {
-            OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, items[i].z, items[i].y);
+            OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, items[i].z, items[i].y, currentObjectIndex);
             i++;
         }
     }
