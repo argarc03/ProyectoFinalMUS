@@ -54,6 +54,7 @@ public class RecordingController : MonoBehaviour
     int prevIndex;
     bool soundPlaying;
     float offset = 0.02f;
+    public GameObject exitMenu;
 
     // Comparator function
     static int SortByTimePos(Vector3 p1, Vector3 p2)
@@ -293,6 +294,9 @@ public class RecordingController : MonoBehaviour
     // Handle the controller input and create items if necessary
     void handleInput()
     {
+        if (exitMenu.activeSelf)
+            return;
+
         float DPADposX = Input.GetAxis("DPADHorizontal");
         float DPADposY = Input.GetAxis("DPADVertical");
 

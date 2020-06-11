@@ -54,6 +54,8 @@ public class InputHandler : MonoBehaviour
     public AudioClip changeSoundClip;
     AudioSource audioUI;
 
+    public GameObject exitMenu;
+
     // Presets
     bool[] usedPresets;
     public List<GameObject> disabledPresetObjs;
@@ -78,6 +80,18 @@ public class InputHandler : MonoBehaviour
     // the recorder, and the navigation input
     void Update()
     {
+        // UPDATE EXIT MENU
+        if (Input.GetButtonDown("Start"))
+            exitMenu.SetActive(true);
+
+        if (exitMenu.activeSelf && Input.GetButtonDown("Button A"))
+            Application.Quit();
+        if (exitMenu.activeSelf && Input.GetButtonDown("Button B"))
+            exitMenu.SetActive(false);
+
+        if (exitMenu.activeSelf)
+            return;
+
         // UPDATE RECORDER PANEL
         if (pianoPanel.activeSelf && Input.GetAxis("LeftBumper") != 0)
             closePiano();
