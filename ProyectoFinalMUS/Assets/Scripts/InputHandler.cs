@@ -74,6 +74,8 @@ public class InputHandler : MonoBehaviour
         angleSector = 90 / buttonsSampler.Count;
     }
 
+    // Update the UI of presets and record wheels,
+    // the recorder, and the navigation input
     void Update()
     {
         // UPDATE RECORDER PANEL
@@ -240,6 +242,7 @@ public class InputHandler : MonoBehaviour
         }
     }
 
+    // Update the cursor position and the musician selected
     void updateCursorNavigationMode()
     {
         GameObject[,] soundObjects = soundObjManager.getSoundObjects();
@@ -247,8 +250,6 @@ public class InputHandler : MonoBehaviour
         // Select an object
         if (selectedSoundObject == null && Input.GetButtonDown("Button A"))
         {
-            // TODO: Abrir un menú con las opciones (Silenciar, Mover, Eliminar...)
-            // de momento: borrar el objeto
             string n = soundObjManager.getObjectType(cursorX, cursorY);
             switch (n)
             {
@@ -260,7 +261,7 @@ public class InputHandler : MonoBehaviour
                     usedPresets[1] = false;
                     disabledPresetObjs[1].SetActive(false);
                     break;
-                case "/drumPreset2":
+                case "/drumPreset":
                     usedPresets[2] = false;
                     disabledPresetObjs[2].SetActive(false);
                     break;
@@ -374,6 +375,7 @@ public class InputHandler : MonoBehaviour
         }
     }
 
+    // Start musicians navigation 
     void setCursorNavigationMode(bool active)
     {
         navigationInstructions.SetActive(active);
@@ -392,16 +394,16 @@ public class InputHandler : MonoBehaviour
         }
     }
 
+    // Close the recorder
     void closePiano()
     {
         pianoPanel.SetActive(false);
         drumsControls.SetActive(false);
         instrumentControls.SetActive(false);
         pianoPanel.GetComponent<RecordingController>().deactivatePiano();
-
-        //audioUI.PlayOneShot();
     }
 
+    // Open the recorder
     public void openPiano(string name)
     {
         pianoPanel.SetActive(true);
@@ -439,7 +441,7 @@ public class InputHandler : MonoBehaviour
                     disabledPresetObjs[1].SetActive(true);
                 }
                 break;
-            case "/drumPreset2":
+            case "/drumPreset":
                 if (!usedPresets[2])
                 {
                     soundObj = instrumentPrefabs[2];

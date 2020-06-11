@@ -7,7 +7,7 @@ public class Sound : MonoBehaviour
 {
     public List<Vector3> items = new List<Vector3>(); // time pos, freq, start/stop
     public TimeController timeControl;
-    public string name = "";
+    public new string name = "";
     public int objectIndex;
     int i = 0;
 
@@ -47,6 +47,7 @@ public class Sound : MonoBehaviour
         }
     }
 
+    // Play the items in time (only if its a record)
     void playItems()
     {
         if (i < items.Count && (timeControl.time <= items[i].x + 0.01f && timeControl.time >= items[i].x - 0.01f))
@@ -56,6 +57,7 @@ public class Sound : MonoBehaviour
         }
     }
 
+    // Mute the musician
     public void mute(int index)
     {
         meshRenderer.materials = muteMaterials;
@@ -67,6 +69,7 @@ public class Sound : MonoBehaviour
             OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, -1, items[i].y, objectIndex);
     }
 
+    // Desmute the musician
     public void desmute(int index)
     {
         meshRenderer.materials = originalMaterials;

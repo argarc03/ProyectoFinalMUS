@@ -7,7 +7,7 @@ public class RecordingController : MonoBehaviour
 {
     public bool pianoActive = false;
     public bool pianoPlaying = false;
-    public string name = ""; //usar esto cuando se añadan varios instrumentos!!!!
+    public new string name = "";
     public int currentObjectIndex;
 
     public GameObject timeBar;
@@ -51,10 +51,11 @@ public class RecordingController : MonoBehaviour
 
     bool inputAfterEnd = false;
     public Stack<int> additionOrder = new Stack<int>();
-    int oldI;
+    int prevIndex;
     bool soundPlaying;
     float offset = 0.02f;
 
+    // Comparator function
     static int SortByTimePos(Vector3 p1, Vector3 p2)
     {
         return p1.x.CompareTo(p2.x);
@@ -134,6 +135,7 @@ public class RecordingController : MonoBehaviour
         values = data.values;
     }
 
+    // Generate a musician in the scenario and close the recorder
     public void acceptCreation()
     {
         if (!pianoPlaying)
@@ -152,6 +154,7 @@ public class RecordingController : MonoBehaviour
         }
     }
 
+    // Remove the last item added
     public void undo()
     {
         if (!pianoPlaying && items.Count != 0)
@@ -160,7 +163,7 @@ public class RecordingController : MonoBehaviour
             // destroy the stop and start of the
             // last item added
 
-            // en la nota
+            // inside the note
             if (i - 1 == additionOrder.Peek() - 1)
             {
                 OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, -1, items[i - 1].y, currentObjectIndex);
@@ -170,13 +173,12 @@ public class RecordingController : MonoBehaviour
                 i--;
                 if (i < 0) i = 0;
             }
-            // detras de la nota
+            // before the note
             else if (i > additionOrder.Peek())
             {
                 i -= 2;
                 if (i < 0) i = 0;
             }
-
 
             items.RemoveAt(additionOrder.Pop());
             items.RemoveAt(additionOrder.Pop());
@@ -190,14 +192,13 @@ public class RecordingController : MonoBehaviour
                 itemsGOSets.RemoveAt(itemsGOSets.Count - 1);
             }
 
-            
-
             audioUI.PlayOneShot(undoClip, 0.8f);
 
             items.Sort(SortByTimePos);
         }
     }
 
+    // Delete all the items and gameObjects recorded
     public void cleanAll()
     {
         if (!pianoPlaying && items.Count != 0)
@@ -218,12 +219,14 @@ public class RecordingController : MonoBehaviour
         }
     }
 
+    // Close the recorder
     public void deactivatePiano()
     {
         pianoActive = false;
         cleanAll();
     }
 
+    // Play the notes in time
     void playItems()
     {
         if (i < items.Count && (timeControl.time >= items[i].x - offset))
@@ -241,6 +244,7 @@ public class RecordingController : MonoBehaviour
         }
     }
 
+    // Generate the gameObjects of the item to draw the note
     void createItem()
     {
         if (pianoPlaying && instantiateItem && (timeControl.time % 0.05f) < 0.05f)
@@ -257,16 +261,16 @@ public class RecordingController : MonoBehaviour
         }
     }
 
+    // Update the timeBar position with the current time
     void updateTime()
     {
         if (timeControl.time <= 0.01f)
             i = 0;
 
-        //print(soundPlaying);
-
         timeBar.transform.localPosition = new Vector3((timeControl.time - 1) * 75, 0f, 0f);
     }
 
+    // Add item with 1 message to the items list
     void addStartItem(int y, int value, Color color)
     {
         if (items.Count == 0 || i == 0 || (items.Count != 0 && i - 1 >= 0 && i - 1 < items.Count && items[i - 1].z == -1))
@@ -281,11 +285,12 @@ public class RecordingController : MonoBehaviour
                 additionOrder.Push(i);
                 itemsGOSets.Add(new List<GameObject>());
                 currentColor = color;
-                oldI = i;
+                prevIndex = i;
             }
         }
     }
 
+    // Handle the controller input and create items if necessary
     void handleInput()
     {
         float DPADposX = Input.GetAxis("DPADHorizontal");
@@ -298,16 +303,14 @@ public class RecordingController : MonoBehaviour
         if (inputAfterEnd)
         {
             if (!Input.anyKey)
-            {
                 inputAfterEnd = false;
-                //print("inputafterend = false");
-            }
+
             return;
         }
 
         // reach end or start of a note
         if (pianoPlaying && ((items[items.Count - 1].z == 1 && item.x >= timeControl.maxTime - 0.02f) ||
-            (oldI + 1 < items.Count && timeControl.time >= items[oldI + 1].x - offset)))
+            (prevIndex + 1 < items.Count && timeControl.time >= items[prevIndex + 1].x - offset)))
         {
             pianoPlaying = false;
             inputAfterEnd = true;

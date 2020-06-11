@@ -11,7 +11,6 @@ public class SoundObjectManager : MonoBehaviour
     // Sound Objects
     GameObject[,] soundObjects;
     string[,] objectTypes;
-    //bool[,] muted;
 
     int soundCounter = 0;
 
@@ -23,10 +22,10 @@ public class SoundObjectManager : MonoBehaviour
     {
         soundObjects = new GameObject[height, width];
         objectTypes = new string[height, width];
-        //muted = new bool[height, width];
         audioUI = GetComponent<AudioSource>();
     }
 
+    // Create a musician in the scenario
     public void addSoundObject(string name, GameObject soundObj)
     {
         int x = (soundCounter) % width;
@@ -35,7 +34,7 @@ public class SoundObjectManager : MonoBehaviour
 
         if (soundObjects[y, x] == null)
         {
-            OSCHandler.Instance.SendMessageToClient("SuperCollider", name, 1.0, soundCounter, -1);
+            OSCHandler.Instance.SendSoundMessageToClient("SuperCollider", name, 1.0, -1, soundCounter);
 
             soundObjects[y, x] = Instantiate(soundObj, new Vector3(x + 1, 0, -y), Quaternion.identity);
             objectTypes[y, x] = name;
@@ -48,6 +47,7 @@ public class SoundObjectManager : MonoBehaviour
             print("Error: Place in object array already occupied by an object\n");
     }
 
+    // Remove the musician in the scenario coordinates x, y
     public void removeSoundObject(int x, int y)
     {
         if (soundObjects[y, x] != null)
@@ -71,29 +71,22 @@ public class SoundObjectManager : MonoBehaviour
         return soundObjects[y, x].GetComponent<Sound>().isMuted();
     }
 
+    // Mute the musician in the scenario coordinates x, y
     public void muteSoundObject(int x, int y)
     {
         if (soundObjects[y, x] != null)
         {
-            //OSCHandler.Instance.SendMessageToClient("SuperCollider", objectTypes[y, x], -1.0, x + y * width, -1);
-
-            /*Destroy(soundObjects[y, x]);
-            soundObjects[y, x] = null;
-            objectTypes[y, x] = null;
-            rearrangeObjects(x, y);
-            soundCounter--;*/
-
             Sound soundComp = soundObjects[y, x].GetComponent<Sound>();
             if (soundComp != null)
                 soundComp.mute(x + (y * width));
 
-            //muted[y, x] = true;
             audioUI.PlayOneShot(removeClip);
         }
         else
             print("Error: No object at given location\n");
     }
 
+    // Desmute the musician in the scenario coordinates x, y
     public void desmuteSoundObject(int x, int y)
     {
         if (soundObjects[y, x] != null)
@@ -108,6 +101,8 @@ public class SoundObjectManager : MonoBehaviour
             print("Error: No object at given location\n");
     }
 
+    // Desmute the musician in the scenario coordinates x, y
+    // and mute all the others
     public void soloSoundObject(int x, int y)
     {
         GameObject soloObject = soundObjects[y, x];
@@ -146,6 +141,7 @@ public class SoundObjectManager : MonoBehaviour
         return soundCounter;
     }
 
+    // Sort the musicians in the scenario
     void rearrangeObjects(int x, int y)
     {
         bool reachedEnd = false;
